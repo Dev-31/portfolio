@@ -29,8 +29,8 @@ export default function ContactForm() {
       setFormData({ name: '', email: '', role: 'client', message: '' });
       
       // Track analytics
-      if (typeof window !== 'undefined' && window.umami) {
-        window.umami.track('contact-form-submit', { role: formData.role });
+      if (typeof window !== 'undefined' && (window as any).umami) {
+        (window as any).umami.track('contact-form-submit', { role: formData.role });
       }
     } catch (error) {
       setStatus('error');

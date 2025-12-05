@@ -14,8 +14,8 @@ export default function ResumeChooser() {
     link.click();
 
     // Track analytics
-    if (typeof window !== 'undefined' && window.umami) {
-      window.umami.track('resume-download', { type });
+    if (typeof window !== 'undefined' && (window as any).umami) {
+        (window as any).umami.track('resume-download', { type });
     }
   };
 
