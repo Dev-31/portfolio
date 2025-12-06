@@ -1,139 +1,352 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import React, { useRef } from 'react';
+import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 
-const projects = [
+// =====================
+// TYPES
+// =====================
+
+type AccentColor = {
+  r: number;
+  g: number;
+  b: number;
+};
+
+type Project = {
+  title: string;
+  category: string;
+  description: string;
+  tags: string[];
+  github: string;
+  accentColor: AccentColor;
+};
+
+// =====================
+// PROJECT DATA
+// =====================
+
+const projects: Project[] = [
   {
     title: "Cryptocurrency Hedging Bot",
-    category: "Quantitative Finance / Automation",
-    description: "Automated hedging system monitoring real-time crypto portfolio exposure across multiple exchanges. Implements delta-neutral strategies with integrated risk analytics and Telegram notifications.",
-    tags: ["Python", "Risk Management", "API Integration", "Telegram Bot"],
+    category: "Quantitative Finance",
+    description:
+      "Automated hedging system monitoring real-time crypto portfolio exposure across multiple exchanges. Implements delta-neutral strategies with integrated risk analytics and Telegram notifications.",
+    tags: ["Python", "Risk Management", "API Integration", "Automation"],
     github: "https://github.com/Dev-31/Hedging-Bot",
-    featured: true
+    accentColor: { r: 59, g: 130, b: 246 }
   },
   {
     title: "DDoS Intrusion Detection System",
-    category: "Cybersecurity / Deep Learning",
-    description: "Deep learning-based IDS using CNN, RNN, and LSTM architectures on the UNSW-NB15 dataset. Achieves high accuracy in detecting distributed denial-of-service attacks through behavioral pattern analysis.",
+    category: "Cybersecurity",
+    description:
+      "Deep learning-based IDS using CNN, RNN, and LSTM architectures on the UNSW-NB15 dataset. Designed to detect distributed denial-of-service threats using behavioral feature patterns.",
     tags: ["Python", "TensorFlow", "Deep Learning", "Network Security"],
-    github: "https://github.com/Dev-31/Intrusion-Detection-System-for-DDoS-Attack-using-Deep-Learning",
-    featured: true
+    github:
+      "https://github.com/Dev-31/Intrusion-Detection-System-for-DDoS-Attack-using-Deep-Learning",
+    accentColor: { r: 147, g: 51, b: 234 }
   },
   {
     title: "DVWA Kubernetes Lab",
-    category: "DevOps / Security Testing",
-    description: "Kubernetes-deployed Damn Vulnerable Web Application environment for security testing and training. Provides containerized, scalable infrastructure for penetration testing practice.",
-    tags: ["Kubernetes", "Docker", "Security", "DevOps"],
+    category: "DevOps & Security",
+    description:
+      "Kubernetes-deployed Damn Vulnerable Web Application environment for penetration testing and security experimentation. Scalable, containerized, and ideal for training.",
+    tags: ["Kubernetes", "Docker", "Security", "Infrastructure"],
     github: "https://github.com/Dev-31/DVWA-k8s-lab",
-    featured: false
+    accentColor: { r: 16, g: 185, b: 129 }
   },
   {
     title: "WatchdogAI",
-    category: "AI / Monitoring",
-    description: "AI-powered monitoring and alerting system designed to track system metrics and anomalies. Implements intelligent detection patterns for proactive issue identification.",
+    category: "AI Monitoring",
+    description:
+      "AI-powered monitoring and alerting system that tracks anomalies and system drift patterns. Built for proactive detection and intelligent automation pipelines.",
     tags: ["Python", "AI", "Monitoring", "Automation"],
     github: "https://github.com/Dev-31/WatchdogAI",
-    featured: false
+    accentColor: { r: 249, g: 115, b: 22 }
   }
 ];
 
-export default function Projects() {
+// =====================
+// PROJECT CARD COMPONENT
+// =====================
+
+type ProjectCardProps = {
+  project: Project;
+  index: number;
+};
+
+const ProjectCard = ({ project, index }: ProjectCardProps) => {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(cardRef, { once: true, margin: "-100px" });
+
+  const { scrollYProgress } = useScroll({
+    target: cardRef,
+    offset: ["start end", "end start"]
+  });
+
+  const y = useTransform(scrollYProgress, [0, 1], [100, -100]);
+  const opacity = useTransform(scrollYProgress, [0, 0.2, 1], [0, 1, 0]);
+
+  const { r, g, b } = project.accentColor;
+
   return (
-    <section id="projects" className="py-40 px-6 bg-black relative overflow-hidden">
-      {/* Subtle gradient background */}
-      <div className="absolute inset-0 bg-linear-to-b from-transparent via-blue-950/5 to-transparent pointer-events-none" />
-      
-      <div className="max-w-7xl mx-auto relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="mb-20 text-center"
+    <motion.div
+      ref={cardRef}
+      style={{ y, opacity }}
+      initial={{ opacity: 0, y: 60 }}
+      animate={isInView ? { opacity: 1, y: 0 } : {}}
+      transition={{
+        duration: 0.8,
+        delay: index * 0.2,
+        ease: [0.16, 1, 0.3, 1]
+      }}
+    >
+      <motion.a
+        href={project.github}
+        target="_blank"
+        rel="noopener noreferrer"
+        whileHover={{ scale: 1.02, y: -8 }}
+        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+        className="group block relative"
+      >
+        <div
+          style={{
+            position: 'relative',
+            backdropFilter: 'blur(32px)',
+            background: `radial-gradient(circle at top right, rgba(${r}, ${g}, ${b}, 0.2), transparent)`,
+            border: '1px solid rgba(255, 255, 255, 0.05)',
+            borderRadius: '1.5rem',
+            padding: '2.5rem',
+            overflow: 'hidden',
+            boxShadow: `0 25px 50px -12px rgba(${r}, ${g}, ${b}, 0.25)`,
+            transition: 'all 0.5s'
+          }}
         >
-          <h2 className="text-6xl md:text-7xl font-light mb-6 tracking-tight">
+          {/* Glow orb */}
+          <div
+            className="group-hover:opacity-30"
+            style={{
+              position: 'absolute',
+              right: '-5rem',
+              top: '-5rem',
+              width: '15rem',
+              height: '15rem',
+              background: `radial-gradient(circle, rgba(${r}, ${g}, ${b}, 0.2), transparent)`,
+              borderRadius: '50%',
+              filter: 'blur(60px)',
+              opacity: 0,
+              transition: 'opacity 0.7s'
+            }}
+          />
+
+          {/* Content */}
+          <div style={{ position: 'relative', zIndex: 10 }}>
+            {/* Category */}
+            <div className="flex items-center justify-between mb-6">
+              <span
+                style={{
+                  padding: '0.5rem 1rem',
+                  backdropFilter: 'blur(16px)',
+                  backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  borderRadius: '9999px',
+                  fontSize: '0.75rem',
+                  fontWeight: '500',
+                  color: `rgb(${r}, ${g}, ${b})`,
+                  letterSpacing: '0.1em'
+                }}
+              >
+                {project.category}
+              </span>
+
+              <div
+                style={{
+                  width: '2.5rem',
+                  height: '2.5rem',
+                  borderRadius: '50%',
+                  backdropFilter: 'blur(16px)',
+                  backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: `rgb(${r}, ${g}, ${b})`
+                }}
+              >
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 17L17 7M17 7H7M17 7V17" />
+                </svg>
+              </div>
+            </div>
+
+            {/* Title */}
+            <h3
+              className="group-hover:translate-x-2 transition-transform"
+              style={{
+                fontSize: 'clamp(1.5rem, 3vw, 2rem)',
+                fontWeight: '300',
+                marginBottom: '1rem'
+              }}
+            >
+              {project.title}
+            </h3>
+
+            {/* Description */}
+            <p
+              style={{
+                fontSize: '1.125rem',
+                color: 'rgb(156, 163, 175)',
+                lineHeight: '1.75',
+                marginBottom: '2rem',
+                fontWeight: '300'
+              }}
+            >
+              {project.description}
+            </p>
+
+            {/* Tags */}
+            <div className="flex flex-wrap gap-3 mb-8">
+              {project.tags.map((tag, idx) => (
+                <motion.span
+                  key={tag}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={isInView ? { opacity: 1, scale: 1 } : {}}
+                  transition={{ delay: index * 0.2 + idx * 0.1 }}
+                  style={{
+                    padding: '0.5rem 1rem',
+                    backdropFilter: 'blur(16px)',
+                    backgroundColor: 'rgba(255, 255, 255, 0.03)',
+                    border: '1px solid rgba(255, 255, 255, 0.08)',
+                    borderRadius: '0.75rem',
+                    fontSize: '0.875rem',
+                    color: 'rgb(209, 213, 219)',
+                    transition: 'all 0.3s'
+                  }}
+                  className="hover:bg-white/5"
+                >
+                  {tag}
+                </motion.span>
+              ))}
+            </div>
+
+            {/* View Project */}
+            <div
+              className="group-hover:gap-4 transition-all flex items-center gap-2 font-medium"
+              style={{ color: `rgb(${r}, ${g}, ${b})` }}
+            >
+              <span>View Project</span>
+              <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </motion.a>
+    </motion.div>
+  );
+};
+
+// =====================
+// PROJECTS SECTION WRAPPER
+// =====================
+
+const Projects = () => {
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(sectionRef, { once: true, margin: "-200px" });
+
+  return (
+    <section
+      ref={sectionRef}
+      id="projects"
+      style={{
+        position: 'relative',
+        padding: '10rem 1.5rem',
+        backgroundColor: 'black',
+        overflow: 'hidden'
+      }}
+    >
+      {/* Background gradients */}
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: '25%',
+          width: '600px',
+          height: '600px',
+          background: 'radial-gradient(circle, rgba(59, 130, 246, 0.1), transparent)',
+          borderRadius: '50%',
+          filter: 'blur(150px)'
+        }}
+      />
+      <div
+        style={{
+          position: 'absolute',
+          bottom: 0,
+          right: '25%',
+          width: '600px',
+          height: '600px',
+          background: 'radial-gradient(circle, rgba(147, 51, 234, 0.1), transparent)',
+          borderRadius: '50%',
+          filter: 'blur(150px)'
+        }}
+      />
+
+      <div style={{ maxWidth: '80rem', margin: '0 auto', position: 'relative', zIndex: 10 }}>
+        {/* Section Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8 }}
+          style={{ marginBottom: '6rem', textAlign: 'center' }}
+        >
+          <motion.div
+            initial={{ scaleX: 0 }}
+            animate={isInView ? { scaleX: 1 } : {}}
+            transition={{ duration: 1, delay: 0.2 }}
+            style={{
+              width: '6rem',
+              height: '2px',
+              background: 'linear-gradient(to right, rgb(59, 130, 246), rgb(147, 51, 234))',
+              margin: '0 auto 2rem'
+            }}
+          />
+          <h2
+            style={{
+              fontSize: 'clamp(3.75rem, 8vw, 6rem)',
+              fontWeight: '300',
+              marginBottom: '1.5rem',
+              letterSpacing: '-0.03em',
+              background: 'linear-gradient(to right, white, rgb(107, 114, 128))',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent'
+            }}
+          >
             Selected Work
           </h2>
-          <p className="text-xl text-gray-400 max-w-2xl mx-auto font-light">
-            Building systems that solve real problems at the intersection of AI, security, and infrastructure.
+          <p
+            style={{
+              fontSize: 'clamp(1.25rem, 2vw, 1.5rem)',
+              color: 'rgb(156, 163, 175)',
+              maxWidth: '48rem',
+              margin: '0 auto',
+              fontWeight: '300',
+              lineHeight: '1.75'
+            }}
+          >
+            Building systems that solve real problems at the intersection of AI,
+            security, and infrastructure.
           </p>
         </motion.div>
-        
-        <div className="space-y-6">
-          {projects.map((project, idx) => (
-            <motion.a
-              key={idx}
-              href={project.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: idx * 0.1 }}
-              viewport={{ once: true }}
-              className="block group"
-            >
-              <div className="relative bg-zinc-950/50 backdrop-blur-sm border border-zinc-800/50 rounded-2xl p-10 hover:border-blue-500/50 transition-all duration-500 hover:bg-zinc-900/50">
-                {/* Featured badge */}
-                {project.featured && (
-                  <div className="absolute top-6 right-6">
-                    <span className="px-3 py-1 text-xs font-medium bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded-full">
-                      Featured
-                    </span>
-                  </div>
-                )}
-                
-                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
-                  <div className="flex-1">
-                    <div className="mb-3">
-                      <span className="text-sm text-blue-400 font-medium tracking-wide uppercase">
-                        {project.category}
-                      </span>
-                    </div>
-                    
-                    <h3 className="text-3xl md:text-4xl font-light mb-4 group-hover:text-blue-400 transition-colors duration-300">
-                      {project.title}
-                    </h3>
-                    
-                    <p className="text-lg text-gray-400 leading-relaxed mb-6 max-w-3xl">
-                      {project.description}
-                    </p>
-                    
-                    <div className="flex flex-wrap gap-2">
-                      {project.tags.map((tag, tagIdx) => (
-                        <span 
-                          key={tagIdx} 
-                          className="px-4 py-2 bg-zinc-800/50 text-sm text-gray-300 rounded-lg border border-zinc-700/50"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center justify-center lg:justify-end">
-                    <div className="flex items-center gap-2 text-blue-400 group-hover:translate-x-2 transition-transform duration-300">
-                      <span className="text-sm font-medium">View Project</span>
-                      <svg 
-                        className="w-5 h-5" 
-                        fill="none" 
-                        stroke="currentColor" 
-                        viewBox="0 0 24 24"
-                      >
-                        <path 
-                          strokeLinecap="round" 
-                          strokeLinejoin="round" 
-                          strokeWidth={2} 
-                          d="M17 8l4 4m0 0l-4 4m4-4H3" 
-                        />
-                      </svg>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </motion.a>
+
+        {/* Projects List */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '3rem' }}>
+          {projects.map((project, index) => (
+            <ProjectCard key={project.title} project={project} index={index} />
           ))}
         </div>
       </div>
     </section>
   );
-}
+};
+
+export default Projects;
