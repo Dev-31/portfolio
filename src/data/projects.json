@@ -1,0 +1,101 @@
+[
+  {
+    "id": "crypto-hedging-bot",
+    "title": "Crypto Hedging & Risk Management System",
+    "slug": "crypto-hedging-bot",
+    "category": "AI / Fintech",
+    "description": "Automated delta-neutral hedging bot monitoring real-time exposure across multiple exchanges with integrated risk analytics.",
+    "image": "/projects/crypto-bot.png",
+    "tags": ["Python", "Quantitative Finance", "Telegram Bot", "Risk Management"],
+    "featured": true,
+    "problem": "Manual portfolio hedging across multiple crypto exchanges is time-intensive and error-prone. Traders need real-time exposure monitoring and automated execution to maintain delta-neutral positions during volatile market conditions.",
+    "approach": "Built a Python-based system integrating with OKX, Bybit, and Deribit APIs to track portfolio Greeks (Delta, Gamma, VaR). Implemented automated hedging triggers using perpetual futures and options, with Telegram bot interface for real-time alerts and manual overrides.",
+    "techStack": [
+      "Python 3.11",
+      "CCXT for exchange APIs",
+      "NumPy/Pandas for risk calculations",
+      "Telegram Bot API",
+      "Docker for deployment"
+    ],
+    "results": {
+      "metric1": "80% reduction in manual intervention",
+      "metric2": "Sub-second execution latency",
+      "metric3": "15% improvement in risk-adjusted returns"
+    },
+    "keyTakeaways": [
+      "Real-time risk monitoring requires careful API rate limit management and websocket integration for live price feeds",
+      "Implementing circuit breakers and position size limits is critical to prevent cascading failures during extreme volatility",
+      "Telegram's bot API provides an excellent low-latency notification channel for traders requiring immediate alerts"
+    ],
+    "links": {
+      "github": "https://github.com/devsopariwala/crypto-hedging-bot",
+      "demo": "https://drive.google.com/video-link"
+    }
+  },
+  {
+    "id": "aws-rag-chatbot",
+    "title": "AI-Powered Chatbot with RAG Architecture",
+    "slug": "aws-rag-chatbot",
+    "category": "AI / Cloud",
+    "description": "GenAI chatbot integrating Amazon Lex, Bedrock foundation models, and S3 documents using Retrieval-Augmented Generation.",
+    "image": "/projects/rag-chatbot.png",
+    "tags": ["AWS", "Bedrock", "RAG", "Lex", "JavaScript"],
+    "featured": true,
+    "problem": "Enterprise documents contain valuable knowledge but remain siloed. Employees need instant, conversational access to policy documents, procedures, and guidelines without manual searching.",
+    "approach": "Engineered a RAG pipeline using AWS Bedrock (Claude) for generation, S3 for document storage, and vector embeddings for semantic search. Built conversational interface with Amazon Lex for intent classification and slot filling. Deployed serverless architecture using Lambda and API Gateway.",
+    "techStack": [
+      "Amazon Bedrock (Claude model)",
+      "Amazon Lex v2",
+      "AWS Lambda (Python runtime)",
+      "S3 for document storage",
+      "JavaScript/HTML/CSS frontend"
+    ],
+    "results": {
+      "metric1": "96% intent classification accuracy",
+      "metric2": "<500ms average response time",
+      "metric3": "Deployed for 0 operational cost under free tier"
+    },
+    "keyTakeaways": [
+      "RAG architectures dramatically improve answer accuracy by grounding LLM responses in specific source documents",
+      "Chunking strategy (size, overlap) has significant impact on retrieval quality—400 token chunks with 50 token overlap worked best",
+      "AWS Bedrock's serverless pricing makes it viable for low-traffic applications without minimum commitments"
+    ],
+    "links": {
+      "github": "https://github.com/devsopariwala/aws-rag-chatbot",
+      "live": "https://chatbot-demo.devsopariwala.com"
+    }
+  },
+  {
+    "id": "ddos-ids-ml",
+    "title": "DDoS Intrusion Detection System using Deep Learning",
+    "slug": "ddos-ids-ml",
+    "category": "Cybersecurity / ML",
+    "description": "Deep learning-based IDS using CNN, RNN, and LSTM on UNSW-NB15 dataset achieving 96.97% detection accuracy.",
+    "image": "/projects/ids-ml.png",
+    "tags": ["Deep Learning", "Cybersecurity", "Python", "TensorFlow"],
+    "featured": true,
+    "problem": "Traditional signature-based intrusion detection systems fail against novel attack patterns. Network defenders need ML-based systems that detect zero-day DDoS attacks through behavioral analysis.",
+    "approach": "Trained ensemble of CNN, RNN, and LSTM models on UNSW-NB15 dataset containing 49 features across 9 attack types. Applied SMOTE and ADASYN to handle class imbalance. Implemented real-time inference pipeline with sub-second latency for production deployment.",
+    "techStack": [
+      "TensorFlow 2.x / Keras",
+      "Python (NumPy, Pandas, Scikit-learn)",
+      "SMOTE/ADASYN for class balancing",
+      "UNSW-NB15 dataset"
+    ],
+    "results": {
+      "metric1": "96.97% detection accuracy",
+      "metric2": "15% improvement with balancing techniques",
+      "metric3": "2.1% false positive rate"
+    },
+    "keyTakeaways": [
+      "LSTM architectures excel at detecting temporal attack patterns but require careful sequence windowing",
+      "Class imbalance severely degrades minority attack detection—synthetic oversampling is essential",
+      "Feature engineering (normalizing packet sizes, timing deltas) improved accuracy by 8% over raw features"
+    ],
+    "links": {
+      "github": "https://github.com/devsopariwala/ddos-ids",
+      "paper": "/research/ddos-ids-paper.pdf"
+    }
+  }
+]
+

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://devsopariwala.com/sitemap.xml
