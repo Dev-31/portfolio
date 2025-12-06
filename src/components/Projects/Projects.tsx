@@ -4,91 +4,133 @@ import { motion } from 'framer-motion';
 
 const projects = [
   {
-    title: "Crypto Hedging & Risk Management System",
-    category: "AI / Fintech",
-    description: "Automated delta-neutral hedging bot monitoring real-time exposure across multiple exchanges with integrated risk analytics.",
-    tags: ["Python", "Quantitative Finance", "Telegram Bot", "Risk Management"],
-    metrics: ["80% reduction in manual intervention", "Sub-second execution latency", "15% improved risk-adjusted returns"],
-    github: "https://github.com/Dev-31/crypto-hedging-bot"
-  },
-  {
-    title: "AI-Powered Chatbot with RAG Architecture",
-    category: "AI / Cloud",
-    description: "GenAI chatbot integrating Amazon Lex, Bedrock foundation models, and S3 documents using Retrieval-Augmented Generation.",
-    tags: ["AWS", "Bedrock", "RAG", "Lex", "JavaScript"],
-    metrics: ["96% intent classification accuracy", "<500ms average response time", "Deployed on AWS free tier"],
-    github: "https://github.com/Dev-31/aws-rag-chatbot"
+    title: "Cryptocurrency Hedging Bot",
+    category: "Quantitative Finance / Automation",
+    description: "Automated hedging system monitoring real-time crypto portfolio exposure across multiple exchanges. Implements delta-neutral strategies with integrated risk analytics and Telegram notifications.",
+    tags: ["Python", "Risk Management", "API Integration", "Telegram Bot"],
+    github: "https://github.com/Dev-31/Hedging-Bot",
+    featured: true
   },
   {
     title: "DDoS Intrusion Detection System",
-    category: "Cybersecurity / ML",
-    description: "Deep learning-based IDS using CNN, RNN, and LSTM on UNSW-NB15 dataset achieving 96.97% detection accuracy.",
-    tags: ["Deep Learning", "Cybersecurity", "Python", "TensorFlow"],
-    metrics: ["96.97% detection accuracy", "15% improvement with balancing", "2.1% false positive rate"],
-    github: "https://github.com/Dev-31/ddos-ids"
+    category: "Cybersecurity / Deep Learning",
+    description: "Deep learning-based IDS using CNN, RNN, and LSTM architectures on the UNSW-NB15 dataset. Achieves high accuracy in detecting distributed denial-of-service attacks through behavioral pattern analysis.",
+    tags: ["Python", "TensorFlow", "Deep Learning", "Network Security"],
+    github: "https://github.com/Dev-31/Intrusion-Detection-System-for-DDoS-Attack-using-Deep-Learning",
+    featured: true
+  },
+  {
+    title: "DVWA Kubernetes Lab",
+    category: "DevOps / Security Testing",
+    description: "Kubernetes-deployed Damn Vulnerable Web Application environment for security testing and training. Provides containerized, scalable infrastructure for penetration testing practice.",
+    tags: ["Kubernetes", "Docker", "Security", "DevOps"],
+    github: "https://github.com/Dev-31/DVWA-k8s-lab",
+    featured: false
+  },
+  {
+    title: "WatchdogAI",
+    category: "AI / Monitoring",
+    description: "AI-powered monitoring and alerting system designed to track system metrics and anomalies. Implements intelligent detection patterns for proactive issue identification.",
+    tags: ["Python", "AI", "Monitoring", "Automation"],
+    github: "https://github.com/Dev-31/WatchdogAI",
+    featured: false
   }
 ];
 
 export default function Projects() {
   return (
-    <section id="projects" className="py-32 px-6 bg-[#0a0a0a]">
-      <div className="max-w-7xl mx-auto">
-        <motion.h2
+    <section id="projects" className="py-40 px-6 bg-black relative overflow-hidden">
+      {/* Subtle gradient background */}
+      <div className="absolute inset-0 bg-linear-to-b from-transparent via-blue-950/5 to-transparent pointer-events-none" />
+      
+      <div className="max-w-7xl mx-auto relative z-10">
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="text-4xl md:text-5xl font-light mb-16 text-center"
+          className="mb-20 text-center"
         >
-          Projects
-        </motion.h2>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <h2 className="text-6xl md:text-7xl font-light mb-6 tracking-tight">
+            Selected Work
+          </h2>
+          <p className="text-xl text-gray-400 max-w-2xl mx-auto font-light">
+            Building systems that solve real problems at the intersection of AI, security, and infrastructure.
+          </p>
+        </motion.div>
+        
+        <div className="space-y-6">
           {projects.map((project, idx) => (
-            <motion.div
+            <motion.a
               key={idx}
-              initial={{ opacity: 0, y: 20 }}
+              href={project.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: idx * 0.1 }}
               viewport={{ once: true }}
-              className="border border-gray-800 rounded-lg p-6 bg-[#0f0f0f] hover:border-blue-500 transition-colors group"
+              className="block group"
             >
-              <div className="mb-4">
-                <span className="text-xs text-blue-400 font-medium">{project.category}</span>
-                <h3 className="text-xl font-light mt-2 group-hover:text-blue-400 transition-colors">
-                  {project.title}
-                </h3>
+              <div className="relative bg-zinc-950/50 backdrop-blur-sm border border-zinc-800/50 rounded-2xl p-10 hover:border-blue-500/50 transition-all duration-500 hover:bg-zinc-900/50">
+                {/* Featured badge */}
+                {project.featured && (
+                  <div className="absolute top-6 right-6">
+                    <span className="px-3 py-1 text-xs font-medium bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded-full">
+                      Featured
+                    </span>
+                  </div>
+                )}
+                
+                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
+                  <div className="flex-1">
+                    <div className="mb-3">
+                      <span className="text-sm text-blue-400 font-medium tracking-wide uppercase">
+                        {project.category}
+                      </span>
+                    </div>
+                    
+                    <h3 className="text-3xl md:text-4xl font-light mb-4 group-hover:text-blue-400 transition-colors duration-300">
+                      {project.title}
+                    </h3>
+                    
+                    <p className="text-lg text-gray-400 leading-relaxed mb-6 max-w-3xl">
+                      {project.description}
+                    </p>
+                    
+                    <div className="flex flex-wrap gap-2">
+                      {project.tags.map((tag, tagIdx) => (
+                        <span 
+                          key={tagIdx} 
+                          className="px-4 py-2 bg-zinc-800/50 text-sm text-gray-300 rounded-lg border border-zinc-700/50"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center justify-center lg:justify-end">
+                    <div className="flex items-center gap-2 text-blue-400 group-hover:translate-x-2 transition-transform duration-300">
+                      <span className="text-sm font-medium">View Project</span>
+                      <svg 
+                        className="w-5 h-5" 
+                        fill="none" 
+                        stroke="currentColor" 
+                        viewBox="0 0 24 24"
+                      >
+                        <path 
+                          strokeLinecap="round" 
+                          strokeLinejoin="round" 
+                          strokeWidth={2} 
+                          d="M17 8l4 4m0 0l-4 4m4-4H3" 
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
               </div>
-
-              <p className="text-sm text-gray-400 mb-4">{project.description}</p>
-
-              <div className="flex flex-wrap gap-2 mb-4">
-                {project.tags.map((tag, tagIdx) => (
-                  <span key={tagIdx} className="px-2 py-1 bg-gray-800 text-xs rounded">
-                    {tag}
-                  </span>
-                ))}
-              </div>
-
-              <div className="space-y-1 mb-4">
-                {project.metrics.map((metric, metricIdx) => (
-                  <p key={metricIdx} className="text-xs text-gray-500">
-                    • {metric}
-                  </p>
-                ))}
-              </div>
-
-              {project.github && (
-                <a
-                  href={project.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-blue-400 hover:text-blue-300 transition-colors inline-flex items-center"
-                >
-                  View on GitHub →
-                </a>
-              )}
-            </motion.div>
+            </motion.a>
           ))}
         </div>
       </div>
