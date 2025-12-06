@@ -78,7 +78,7 @@ export default function Skills() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {category.skills.map((skill, skillIdx) => (
                   <div key={skillIdx} className="flex items-start space-x-3">
-                    <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                    <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 shrink-0"></div>
                     <div>
                       <p className="font-medium text-gray-100">{skill.name}</p>
                       <p className="text-sm text-gray-400">{skill.evidence}</p>

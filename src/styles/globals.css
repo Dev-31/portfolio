@@ -1,4 +1,4 @@
-@tailwind base;
+/* @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
@@ -45,7 +45,7 @@ button {
   cursor: pointer;
 }
 
-/* Smooth scroll reveal */
+/* Smooth scroll reveal 
 .reveal {
   opacity: 0;
   transform: translateY(30px);
@@ -57,7 +57,7 @@ button {
   transform: translateY(0);
 }
 
-/* Code blocks */
+/* Code blocks 
 pre {
   background: #1a1a1a;
   padding: 1rem;
@@ -68,4 +68,4 @@ pre {
 code {
   font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
   font-size: 0.9em;
-}
+} */

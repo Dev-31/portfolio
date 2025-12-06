@@ -1,28 +1,18 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-
-const heroTitles = [
-  "I build intelligence with intention.",
-  "Where curiosity meets execution.",
-  "Turning ideas into systems that learn.",
-  "Solving problems at human scale and machine speed.",
-  "Designing clarity in a noisy world.",
-  "Thinking deeply. Building simply.",
-  "Shaping technology with discipline and vision.",
-  "Engineering what the future quietly demands."
-];
+import heroTitles from './hero-titles.json';
 
 const Hero = () => {
   const [currentTitle, setCurrentTitle] = useState('');
   const [titleIndex, setTitleIndex] = useState(0);
 
   useEffect(() => {
-    // Random title on mount
     const randomIndex = Math.floor(Math.random() * heroTitles.length);
     setCurrentTitle(heroTitles[randomIndex]);
     setTitleIndex(randomIndex);
 
-    // Auto-cycle every 12 seconds
     const interval = setInterval(() => {
       setTitleIndex((prev) => {
         const next = (prev + 1) % heroTitles.length;
@@ -36,11 +26,9 @@ const Hero = () => {
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white flex items-center justify-center px-6 relative overflow-hidden">
-      {/* Subtle background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-950/20 via-transparent to-purple-950/20 opacity-50" />
+      <div className="absolute inset-0 bg-linear-to-br from-blue-950/20 via-transparent to-purple-950/20 opacity-50" />
       
       <div className="max-w-4xl mx-auto text-center relative z-10">
-        {/* Rotating Hero Title */}
         <AnimatePresence mode="wait">
           <motion.h1
             key={titleIndex}
@@ -54,7 +42,6 @@ const Hero = () => {
           </motion.h1>
         </AnimatePresence>
 
-        {/* Subtitle */}
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -64,7 +51,6 @@ const Hero = () => {
           AI Engineer. Cloud Architect. Cybersecurity Specialist.
         </motion.p>
 
-        {/* Signature Quote */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -78,7 +64,6 @@ const Hero = () => {
           </p>
         </motion.div>
 
-        {/* CTAs */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -91,6 +76,7 @@ const Hero = () => {
           >
             View Projects
           </a>
+
           <a
             href="#contact"
             className="px-8 py-4 bg-transparent border border-gray-600 hover:border-gray-400 rounded-lg font-medium transition-colors duration-200"
@@ -99,7 +85,6 @@ const Hero = () => {
           </a>
         </motion.div>
 
-        {/* Scroll Indicator */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
