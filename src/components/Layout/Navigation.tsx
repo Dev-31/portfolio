@@ -4,11 +4,13 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 
 export default function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const { scrollYProgress } = useScroll();
   
   const logoScale = useTransform(scrollYProgress, [0, 0.1], [1, 0.9]);
 
   useEffect(() => {
+    setIsMounted(true);
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
@@ -173,7 +175,7 @@ export default function Navigation() {
         </motion.a>
 
         {/* Navigation links */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '3rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '3rem' }} className="hidden md:flex">
           {['Story', 'Work', 'Thoughts', 'Connect'].map((item, i) => (
             <motion.a
               key={item}
@@ -189,8 +191,7 @@ export default function Navigation() {
                 textDecoration: 'none',
                 position: 'relative',
                 fontFamily: '-apple-system, BlinkMacSystemFont, sans-serif',
-                transition: 'color 0.3s',
-                display: window.innerWidth < 768 ? 'none' : 'block'
+                transition: 'color 0.3s'
               }}
               className="nav-link"
             >
@@ -233,9 +234,9 @@ export default function Navigation() {
             fontFamily: '-apple-system, BlinkMacSystemFont, sans-serif',
             boxShadow: '0 10px 30px -10px rgba(59, 130, 246, 0.4)',
             position: 'relative',
-            overflow: 'hidden',
-            display: window.innerWidth < 768 ? 'none' : 'block'
+            overflow: 'hidden'
           }}
+          className="hidden md:block"
         >
           <span style={{ position: 'relative', zIndex: 10 }}>Let's Build</span>
           
@@ -260,9 +261,15 @@ export default function Navigation() {
         .nav-link:hover {
           color: white;
         }
-        @media (max-width: 768px) {
-          .nav-link, .cta-button {
-            display: none;
+        .hidden {
+          display: none;
+        }
+        @media (min-width: 768px) {
+          .md\\:flex {
+            display: flex !important;
+          }
+          .md\\:block {
+            display: block !important;
           }
         }
       `}</style>
