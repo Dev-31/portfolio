@@ -6,6 +6,8 @@ import Values from '../components/Values/Values'
 import Contact from '../components/Contact/Contact'
 import Footer from '../components/Layout/Footer'
 import Navigation from '../components/Layout/Navigation'
+import PagesNavigation from '../components/Navigation/PagesNavigation'
+
 
 export default function Home() {
   return (
@@ -18,6 +20,7 @@ export default function Home() {
       <Values />
       <Contact />
       <Footer />
+      <PagesNavigation/>
     </main>
   )
 }
