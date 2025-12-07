@@ -7,7 +7,7 @@ import Contact from '../components/Contact/Contact'
 import Footer from '../components/Layout/Footer'
 import Navigation from '../components/Layout/Navigation'
 import PagesNavigation from '../components/Navigation/PagesNavigation'
-
+import StorySection from '../components/Story/StorySection'
 
 export default function Home() {
   return (
@@ -21,6 +21,7 @@ export default function Home() {
       <Contact />
       <Footer />
       <PagesNavigation/>
+      <StorySection />
     </main>
   )
 }
