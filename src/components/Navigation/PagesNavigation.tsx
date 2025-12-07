@@ -12,11 +12,6 @@ type NavigationPage = {
   iconColor: string;
 };
 
-type NavigationCardProps = {
-  page: NavigationPage;
-  index: number;
-};
-
 const navigationPages: NavigationPage[] = [
   {
     id: 'skills',
@@ -68,9 +63,14 @@ const navigationPages: NavigationPage[] = [
   }
 ];
 
+type NavigationCardProps = {
+  page: NavigationPage;
+  index: number;
+};
+
 const NavigationCard = ({ page, index }: NavigationCardProps) => {
   const cardRef = useRef<HTMLDivElement | null>(null);
-  const isInView = useInView(cardRef, { once: true, margin: '-50px' });
+  const isInView = useInView(cardRef, { once: true, margin: "-50px" });
   const [isHovered, setIsHovered] = useState(false);
 
   return (
@@ -156,13 +156,8 @@ const NavigationCard = ({ page, index }: NavigationCardProps) => {
         {isHovered && (
           <>
             <motion.div
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{
-                opacity: [0, 0.5, 0],
-                scale: [0, 1, 0],
-                x: 40,
-                y: -40
-              }}
+              initial={{ opacity: 0, scale: 0, x: 0, y: 0 }}
+              animate={{ opacity: [0, 0.5, 0], scale: [0, 1, 0], x: 40, y: -40 }}
               transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 0.5 }}
               style={{
                 position: 'absolute',
@@ -175,13 +170,8 @@ const NavigationCard = ({ page, index }: NavigationCardProps) => {
               }}
             />
             <motion.div
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{
-                opacity: [0, 0.5, 0],
-                scale: [0, 1, 0],
-                x: -40,
-                y: -40
-              }}
+              initial={{ opacity: 0, scale: 0, x: 0, y: 0 }}
+              animate={{ opacity: [0, 0.5, 0], scale: [0, 1, 0], x: -40, y: -40 }}
               transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 0.7 }}
               style={{
                 position: 'absolute',
@@ -198,7 +188,7 @@ const NavigationCard = ({ page, index }: NavigationCardProps) => {
 
         <div style={{ position: 'relative', zIndex: 10 }}>
           <motion.div
-            initial={{ scale: 1 }}
+            initial={{ scale: 1, rotate: 0 }}
             animate={isHovered ? { scale: 1.1, rotate: 5 } : { scale: 1, rotate: 0 }}
             transition={{ duration: 0.4 }}
             style={{
@@ -219,24 +209,12 @@ const NavigationCard = ({ page, index }: NavigationCardProps) => {
               stroke="currentColor"
               viewBox="0 0 24 24"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M13 10V3L4 14h7v7l9-11h-7z"
-              />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
           </motion.div>
 
           <div style={{ marginBottom: '1.25rem' }}>
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                marginBottom: '0.75rem'
-              }}
-            >
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
               <h3
                 style={{
                   fontSize: '2.25rem',
@@ -285,16 +263,18 @@ const NavigationCard = ({ page, index }: NavigationCardProps) => {
               fontSize: '1.0625rem',
               color: 'rgb(156, 163, 175)',
               lineHeight: '1.7',
-              fontWeight: '300'
+              fontWeight: '300',
+              fontFamily: 'SF Pro Text, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif',
+              letterSpacing: '-0.01em'
             }}
           >
             {page.description}
           </motion.p>
 
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={isHovered ? { opacity: 1 } : { opacity: 0 }}
-            transition={{ duration: 0.3 }}
+            initial={{ opacity: 0, y: 10 }}
+            animate={isHovered ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
+            transition={{ duration: 0.3, delay: 0.1 }}
             style={{
               marginTop: '1.5rem',
               display: 'flex',
@@ -303,6 +283,7 @@ const NavigationCard = ({ page, index }: NavigationCardProps) => {
               color: page.iconColor,
               fontSize: '0.875rem',
               fontWeight: '500',
+              fontFamily: 'SF Pro Text, -apple-system, sans-serif',
               textTransform: 'uppercase',
               letterSpacing: '0.05em'
             }}
@@ -327,8 +308,8 @@ const NavigationCard = ({ page, index }: NavigationCardProps) => {
 };
 
 const PagesNavigation = () => {
-  const sectionRef = useRef<HTMLOptionElement | null>(null);
-  const isInView = useInView(sectionRef, { once: true, margin: '-150px' });
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const isInView = useInView(sectionRef, { once: true, margin: "-150px" });
 
   return (
     <section
@@ -340,8 +321,11 @@ const PagesNavigation = () => {
         overflow: 'hidden'
       }}
     >
-      <motion.div 
-        animate={{ scale: [1, 1.1, 1], opacity: [0.03, 0.05, 0.03] }}
+      <motion.div
+        animate={{
+          scale: [1, 1.1, 1],
+          opacity: [0.03, 0.05, 0.03]
+        }}
         transition={{ duration: 8, repeat: Infinity }}
         style={{
           position: 'absolute',
@@ -350,12 +334,16 @@ const PagesNavigation = () => {
           width: '600px',
           height: '600px',
           background: 'radial-gradient(circle, rgba(59, 130, 246, 0.15), transparent 70%)',
-          filter: 'blur(80px)'
+          filter: 'blur(80px)',
+          pointerEvents: 'none'
         }}
       />
 
-      <motion.div 
-        animate={{ scale: [1, 1.2, 1], opacity: [0.03, 0.06, 0.03] }}
+      <motion.div
+        animate={{
+          scale: [1, 1.2, 1],
+          opacity: [0.03, 0.06, 0.03]
+        }}
         transition={{ duration: 10, repeat: Infinity, delay: 2 }}
         style={{
           position: 'absolute',
@@ -364,16 +352,27 @@ const PagesNavigation = () => {
           width: '700px',
           height: '700px',
           background: 'radial-gradient(circle, rgba(147, 51, 234, 0.15), transparent 70%)',
-          filter: 'blur(100px)'
+          filter: 'blur(100px)',
+          pointerEvents: 'none'
         }}
       />
 
-      <div style={{ maxWidth: '85rem', margin: '0 auto', position: 'relative', zIndex: 10 }}>
+      <div
+        style={{
+          maxWidth: '85rem',
+          margin: '0 auto',
+          position: 'relative',
+          zIndex: 10
+        }}
+      >
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 1 }}
-          style={{ textAlign: 'center', marginBottom: '8rem' }}
+          style={{
+            textAlign: 'center',
+            marginBottom: '8rem'
+          }}
         >
           <motion.div
             initial={{ scaleX: 0, opacity: 0 }}
@@ -382,7 +381,7 @@ const PagesNavigation = () => {
             style={{
               width: '8rem',
               height: '2px',
-              background: 'linear-gradient(90deg, transparent, rgba(59,130,246,0.6), rgba(147,51,234,0.6), transparent)',
+              background: 'linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.6), rgba(147, 51, 234, 0.6), transparent)',
               margin: '0 auto 3rem'
             }}
           />
@@ -394,9 +393,13 @@ const PagesNavigation = () => {
             style={{
               fontSize: 'clamp(3rem, 6vw, 5rem)',
               fontWeight: '200',
-              letterSpacing: '-0.04em',
               color: 'white',
-              fontFamily: 'SF Pro Display, -apple-system'
+              letterSpacing: '-0.04em',
+              fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif',
+              marginBottom: '1.5rem',
+              background: 'linear-gradient(135deg, white, rgba(255, 255, 255, 0.6))',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent'
             }}
           >
             Explore Further
@@ -411,7 +414,9 @@ const PagesNavigation = () => {
               color: 'rgb(156, 163, 175)',
               maxWidth: '42rem',
               margin: '0 auto',
-              fontWeight: '300'
+              fontWeight: '300',
+              lineHeight: '1.7',
+              fontFamily: 'SF Pro Text, -apple-system, sans-serif'
             }}
           >
             Dive deeper into my work, thoughts, and the journey that shaped how I build.
@@ -421,7 +426,7 @@ const PagesNavigation = () => {
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 450px), 1fr))',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(min(100 percent, 450px), 1fr))',
             gap: '2rem',
             maxWidth: '1400px',
             margin: '0 auto'
