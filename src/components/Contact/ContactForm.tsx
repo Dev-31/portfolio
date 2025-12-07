@@ -1,27 +1,8 @@
-'use client';
-
-import React, { useState, useRef, ChangeEvent, FocusEvent } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 
-// ============================================================================
-// Types
-// ============================================================================
-
-interface FormData {
-  name: string;
-  email: string;
-  role: 'client' | 'recruiter';
-  message: string;
-}
-
-type FocusField = keyof FormData | null;
-
-// ============================================================================
-// Contact Form Component
-// ============================================================================
-
-const ContactForm: React.FC = () => {
-  const [formData, setFormData] = useState<FormData>({
+const ContactForm = () => {
+  const [formData, setFormData] = useState({
     name: '',
     email: '',
     role: 'client',
@@ -29,14 +10,10 @@ const ContactForm: React.FC = () => {
   });
 
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
-  const [focusedField, setFocusedField] = useState<FocusField>(null);
 
-  // Unified handler
-  const handleInput = (key: keyof FormData, value: string) => {
-    setFormData(prev => ({ ...prev, [key]: value }));
-  };
+  // FIXED: Provide correct type for focusedField
+  const [focusedField, setFocusedField] = useState<"name" | "email" | "role" | "message" | null>(null);
 
-  // Submit handler
   const handleSubmit = async () => {
     if (!formData.name || !formData.email || !formData.message) {
       alert('Please fill all fields');
@@ -60,290 +37,219 @@ const ContactForm: React.FC = () => {
       if (typeof window !== 'undefined' && (window as any).umami) {
         (window as any).umami.track('contact-form-submit', { role: formData.role });
       }
-    } catch (error) {
+    } catch {
       setStatus('error');
     }
   };
 
-  // Shared input styles
-  const inputBase: React.CSSProperties = {
+  const inputStyle: React.CSSProperties = {
     width: '100%',
     padding: '1.25rem 1.5rem',
-    backgroundColor: 'rgba(255,255,255,0.02)',
+    backgroundColor: 'rgba(255, 255, 255, 0.02)',
+    backdropFilter: 'blur(16px)',
+    border: '1px solid rgba(255, 255, 255, 0.08)',
     borderRadius: '1rem',
-    border: '1px solid rgba(255,255,255,0.08)',
     fontSize: '1.125rem',
     color: 'white',
     outline: 'none',
-    transition: 'all 0.25s',
-    backdropFilter: 'blur(14px)'
+    transition: 'all 0.3s'
   };
 
-  // =============================================================================
-  // Component JSX
-  // =============================================================================
-
   return (
-    <div className="flex flex-col gap-8">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
 
-      {/* NAME FIELD */}
-      <FieldWrapper label="Name">
+      {/* NAME */}
+      <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }}>
+        <label style={{
+          display: 'block',
+          fontSize: '0.875rem',
+          fontWeight: '500',
+          marginBottom: '0.75rem',
+          color: 'rgb(156, 163, 175)',
+          textTransform: 'uppercase',
+          letterSpacing: '0.15em'
+        }}>
+          Name
+        </label>
+
         <input
           type="text"
+          required
           value={formData.name}
-          placeholder="Your name"
+          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
           onFocus={() => setFocusedField('name')}
           onBlur={() => setFocusedField(null)}
-          onChange={(e: ChangeEvent<HTMLInputElement>) => handleInput('name', e.target.value)}
           style={{
-            ...inputBase,
-            borderColor:
-              focusedField === 'name'
-                ? 'rgba(59,130,246,0.5)'
-                : 'rgba(255,255,255,0.08)'
+            ...inputStyle,
+            borderColor: focusedField === 'name' ? 'rgba(59,130,246,0.5)' : 'rgba(255,255,255,0.08)',
+            backgroundColor: focusedField === 'name' ? 'rgba(255,255,255,0.04)' : 'rgba(255,255,255,0.02)'
           }}
+          placeholder="Your name"
         />
-      </FieldWrapper>
+      </motion.div>
 
-      {/* EMAIL FIELD */}
-      <FieldWrapper label="Email">
+      {/* EMAIL */}
+      <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.2 }}>
+        <label style={{
+          display: 'block',
+          fontSize: '0.875rem',
+          fontWeight: '500',
+          marginBottom: '0.75rem',
+          color: 'rgb(156, 163, 175)',
+          textTransform: 'uppercase',
+          letterSpacing: '0.15em'
+        }}>
+          Email
+        </label>
+
         <input
           type="email"
-          placeholder="your@email.com"
+          required
           value={formData.email}
+          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
           onFocus={() => setFocusedField('email')}
           onBlur={() => setFocusedField(null)}
-          onChange={(e: ChangeEvent<HTMLInputElement>) => handleInput('email', e.target.value)}
           style={{
-            ...inputBase,
-            borderColor:
-              focusedField === 'email'
-                ? 'rgba(59,130,246,0.5)'
-                : 'rgba(255,255,255,0.08)'
+            ...inputStyle,
+            borderColor: focusedField === 'email' ? 'rgba(59,130,246,0.5)' : 'rgba(255,255,255,0.08)',
+            backgroundColor: focusedField === 'email' ? 'rgba(255,255,255,0.04)' : 'rgba(255,255,255,0.02)'
           }}
+          placeholder="your@email.com"
         />
-      </FieldWrapper>
+      </motion.div>
 
-      {/* ROLE SELECTION */}
-      <div>
-        <Label text="I am a" />
+      {/* ROLE */}
+      <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.3 }}>
+        <label style={{
+          display: 'block',
+          fontSize: '0.875rem',
+          fontWeight: '500',
+          marginBottom: '1rem',
+          color: 'rgb(156, 163, 175)',
+          textTransform: 'uppercase',
+          letterSpacing: '0.15em'
+        }}>
+          I am a
+        </label>
 
-        <div className="grid gap-4 md:grid-cols-2">
-          {roleOptions.map(option => (
-            <RoleCard
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem' }}>
+          {[
+            { value: 'client', label: 'Potential Client', desc: 'Looking to collaborate' },
+            { value: 'recruiter', label: 'Recruiter', desc: 'Hiring opportunity' }
+          ].map(option => (
+            <motion.button
               key={option.value}
-              option={option}
-              selected={formData.role === option.value}
-              onSelect={() => handleInput('role', option.value)}
-            />
+              type="button"
+              onClick={() => setFormData({ ...formData, role: option.value })}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              style={{
+                padding: '1.5rem',
+                borderRadius: '1rem',
+                backdropFilter: 'blur(16px)',
+                border: `2px solid ${formData.role === option.value ? 'rgba(59,130,246,0.5)' : 'rgba(255,255,255,0.08)'}`,
+                backgroundColor: formData.role === option.value ? 'rgba(59,130,246,0.08)' : 'rgba(255,255,255,0.02)',
+                textAlign: 'left',
+                cursor: 'pointer',
+                transition: 'all 0.3s'
+              }}
+            >
+              <div style={{ fontSize: '1.125rem', fontWeight: '500', color: 'white' }}>
+                {option.label}
+              </div>
+              <div style={{ fontSize: '0.875rem', color: 'rgb(156,163,175)' }}>
+                {option.desc}
+              </div>
+            </motion.button>
           ))}
         </div>
-      </div>
+      </motion.div>
 
-      {/* MESSAGE FIELD */}
-      <FieldWrapper label="Message">
+      {/* MESSAGE */}
+      <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.4 }}>
+        <label style={{
+          display: 'block',
+          fontSize: '0.875rem',
+          fontWeight: '500',
+          marginBottom: '0.75rem',
+          color: 'rgb(156, 163, 175)',
+          textTransform: 'uppercase',
+          letterSpacing: '0.15em'
+        }}>
+          Message
+        </label>
+
         <textarea
+          required
           rows={6}
-          placeholder="Tell me about your project or opportunity..."
           value={formData.message}
+          onChange={(e) => setFormData({ ...formData, message: e.target.value })}
           onFocus={() => setFocusedField('message')}
           onBlur={() => setFocusedField(null)}
-          onChange={(e: ChangeEvent<HTMLTextAreaElement>) => handleInput('message', e.target.value)}
           style={{
-            ...inputBase,
+            ...inputStyle,
             resize: 'none',
-            borderColor:
-              focusedField === 'message'
-                ? 'rgba(59,130,246,0.5)'
-                : 'rgba(255,255,255,0.08)'
+            borderColor: focusedField === 'message' ? 'rgba(59,130,246,0.5)' : 'rgba(255,255,255,0.08)',
+            backgroundColor: focusedField === 'message' ? 'rgba(255,255,255,0.04)' : 'rgba(255,255,255,0.02)'
           }}
+          placeholder="Tell me about your project or opportunity..."
         />
-      </FieldWrapper>
+      </motion.div>
 
       {/* SUBMIT BUTTON */}
-      <SubmitButton status={status} onSubmit={handleSubmit} />
+      <motion.button
+        type="button"
+        onClick={handleSubmit}
+        disabled={status === 'loading'}
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+        style={{
+          width: '100%',
+          padding: '1.5rem 2rem',
+          borderRadius: '1rem',
+          fontSize: '1.125rem',
+          background: 'linear-gradient(to right, rgb(59,130,246), rgb(147,51,234))',
+          color: 'white',
+          cursor: status === 'loading' ? 'not-allowed' : 'pointer',
+          opacity: status === 'loading' ? 0.5 : 1
+        }}
+      >
+        {status === 'loading' ? 'Sending...' : 'Send Message'}
+      </motion.button>
 
       {/* SUCCESS MESSAGE */}
-      {status === 'success' && <SuccessBox />}
+      {status === 'success' && (
+        <div style={{ color: 'rgb(52,211,153)', textAlign: 'center' }}>
+          Message sent successfully.
+        </div>
+      )}
 
       {/* ERROR MESSAGE */}
-      {status === 'error' && <ErrorBox />}
+      {status === 'error' && (
+        <div style={{ color: 'rgb(248,113,113)', textAlign: 'center' }}>
+          Failed to send message. Please try again.
+        </div>
+      )}
     </div>
   );
 };
 
-// ============================================================================
-// Small UI Components
-// ============================================================================
-
-const Label: React.FC<{ text: string }> = ({ text }) => (
-  <label className="block mb-3 text-sm tracking-wider uppercase font-medium text-gray-400">
-    {text}
-  </label>
-);
-
-const FieldWrapper: React.FC<{ label: string; children: React.ReactNode }> = ({ label, children }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 20 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true }}
-    transition={{ duration: 0.4 }}
-  >
-    <Label text={label} />
-    {children}
-  </motion.div>
-);
-
-// ============================================================================
-// Role Card Component
-// ============================================================================
-
-const roleOptions = [
-  { value: 'client' as const, label: 'Potential Client', desc: 'Looking to collaborate' },
-  { value: 'recruiter' as const, label: 'Recruiter', desc: 'Hiring opportunity' }
-];
-
-const RoleCard: React.FC<{
-  option: { value: 'client' | 'recruiter'; label: string; desc: string };
-  selected: boolean;
-  onSelect: () => void;
-}> = ({ option, selected, onSelect }) => (
-  <motion.button
-    type="button"
-    onClick={onSelect}
-    whileHover={{ scale: 1.02 }}
-    whileTap={{ scale: 0.97 }}
-    className="text-left relative p-6 rounded-xl border backdrop-blur-xl transition-all"
-    style={{
-      borderColor: selected ? 'rgba(59,130,246,0.5)' : 'rgba(255,255,255,0.1)',
-      backgroundColor: selected ? 'rgba(59,130,246,0.08)' : 'rgba(255,255,255,0.03)'
-    }}
-  >
-    <div className="text-lg font-medium text-white mb-1 flex justify-between items-center">
-      {option.label}
-      <span className={`w-5 h-5 rounded-full border flex items-center justify-center transition-all ${
-        selected ? 'border-blue-500' : 'border-gray-600'
-      }`}>
-        {selected && <span className="w-2.5 h-2.5 bg-blue-500 rounded-full" />}
-      </span>
-    </div>
-
-    <p className="text-sm text-gray-400">{option.desc}</p>
-  </motion.button>
-);
-
-// ============================================================================
-// Submit Button Component
-// ============================================================================
-
-const SubmitButton: React.FC<{
-  status: 'idle' | 'loading' | 'success' | 'error';
-  onSubmit: () => void;
-}> = ({ status, onSubmit }) => (
-  <motion.button
-    type="button"
-    onClick={onSubmit}
-    disabled={status === 'loading'}
-    whileHover={{ scale: status === 'loading' ? 1 : 1.02 }}
-    whileTap={{ scale: 0.97 }}
-    className="w-full py-5 rounded-xl text-lg font-medium text-white shadow-xl transition-all"
-    style={{
-      background: 'linear-gradient(to right, rgb(59,130,246), rgb(147,51,234))',
-      opacity: status === 'loading' ? 0.6 : 1
-    }}
-  >
-    {status === 'loading' ? (
-      <motion.div
-        animate={{ rotate: 360 }}
-        transition={{ repeat: Infinity, duration: 1, ease: 'linear' }}
-        className="mx-auto w-6 h-6 border-2 border-white border-t-transparent rounded-full"
-      />
-    ) : (
-      'Send Message'
-    )}
-  </motion.button>
-);
-
-// ============================================================================
-// Status Components
-// ============================================================================
-
-const SuccessBox = () => (
-  <motion.div
-    initial={{ opacity: 0, scale: 0.9 }}
-    animate={{ opacity: 1, scale: 1 }}
-    className="p-5 text-center rounded-xl border backdrop-blur-xl"
-    style={{
-      background: 'rgba(16,185,129,0.1)',
-      borderColor: 'rgba(16,185,129,0.2)',
-      color: 'rgb(52,211,153)'
-    }}
-  >
-    Message sent successfully. I will respond within 24 hours.
-  </motion.div>
-);
-
-const ErrorBox = () => (
-  <motion.div
-    initial={{ opacity: 0, scale: 0.9 }}
-    animate={{ opacity: 1, scale: 1 }}
-    className="p-5 text-center rounded-xl border backdrop-blur-xl"
-    style={{
-      background: 'rgba(239,68,68,0.1)',
-      borderColor: 'rgba(239,68,68,0.2)',
-      color: 'rgb(248,113,113)'
-    }}
-  >
-    Failed to send. Email me at{" "}
-    <a className="underline" href="mailto:devsopariwala22@gmail.com">
-      devsopariwala22@gmail.com
-    </a>
-  </motion.div>
-);
-
-// ============================================================================
-// SECTION WRAPPER
-// ============================================================================
-
-const Contact: React.FC = () => {
-  const sectionRef = useRef<HTMLDivElement | null>(null);
-  const isInView = useInView(sectionRef, { once: true, margin: '-200px' });
+const Contact = () => {
+  const sectionRef = useRef(null);
+  const isInView = useInView(sectionRef, { once: true });
 
   return (
-    <section
-      ref={sectionRef}
-      id="contact"
-      className="relative py-32 px-6 bg-black overflow-hidden"
-    >
-      {/* Background blur orb */}
-      <div className="absolute inset-0 flex justify-center items-center pointer-events-none">
-        <div className="w-[700px] h-[700px] rounded-full blur-[150px]"
-          style={{
-            background: 'radial-gradient(circle, rgba(59,130,246,0.1), transparent)'
-          }}
-        />
-      </div>
+    <section id="contact" ref={sectionRef} style={{ padding: '8rem 1.5rem', background: 'black' }}>
+      <motion.h2 initial={{ opacity: 0 }} animate={isInView ? { opacity: 1 } : {}} style={{
+        fontSize: '4rem',
+        textAlign: 'center',
+        color: 'white',
+        marginBottom: '2rem'
+      }}>
+        Get in Touch
+      </motion.h2>
 
-      <div className="relative max-w-5xl mx-auto z-10">
-        
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-16"
-        >
-          <h2 className="text-white font-light"
-            style={{ fontSize: 'clamp(3rem, 8vw, 5.5rem)' }}
-          >
-            Get in Touch
-          </h2>
-          <p className="text-gray-400 text-lg max-w-xl mx-auto font-light mt-4">
-            Whether you're looking to hire or collaborate, I'd love to hear from you.
-          </p>
-        </motion.div>
-
-        {/* Form */}
+      <div style={{ maxWidth: '48rem', margin: '0 auto' }}>
         <ContactForm />
       </div>
     </section>
