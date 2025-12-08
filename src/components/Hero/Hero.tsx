@@ -1,4 +1,5 @@
 'use client';
+
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, useScroll, useTransform, useMotionValue, useSpring } from 'framer-motion';
 import heroTitles from './hero-titles.json';
@@ -7,6 +8,7 @@ const Hero = () => {
   const [currentTitle, setCurrentTitle] = useState('');
   const [titleIndex, setTitleIndex] = useState(0);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [isMounted, setIsMounted] = useState(false);
   const heroRef = useRef(null);
   
   const { scrollYProgress } = useScroll({
@@ -25,6 +27,7 @@ const Hero = () => {
   const smoothMouseY = useSpring(mouseY, { stiffness: 50, damping: 20 });
 
   useEffect(() => {
+    setIsMounted(true);
     const randomIndex = Math.floor(Math.random() * heroTitles.length);
     setCurrentTitle(heroTitles[randomIndex]);
     setTitleIndex(randomIndex);
@@ -41,6 +44,8 @@ const Hero = () => {
   }, []);
 
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
     const handleMouseMove = (e: MouseEvent) => {
       const { clientX, clientY } = e;
       const { innerWidth, innerHeight } = window;
@@ -319,7 +324,7 @@ const Hero = () => {
           transition={{ delay: 1.6, duration: 1 }}
           style={{
             display: 'flex',
-            flexDirection: window.innerWidth < 640 ? 'column' : 'row',
+            flexDirection: isMounted && window.innerWidth < 640 ? 'column' : 'row',
             gap: '24px',
             justifyContent: 'center',
             alignItems: 'center'
