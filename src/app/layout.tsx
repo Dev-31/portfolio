@@ -1,7 +1,6 @@
 <script defer src="https://cloud.umami.is/share/GKwBpucVrJ4sEUVR" data-website-id="4d810ae3-2cfe-421e-a228-a3d23e40292c"></script>
 import type { Metadata } from 'next'
-import { useState } from 'react';
-import SiteLoader from '../components/Loader/SiteLoader';
+import LoaderWrapper from '../components/Loader/LoaderWrapper';
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -17,32 +16,18 @@ export const metadata: Metadata = {
   },
 }
 
-// export default function RootLayout({
-//   children,
-// }: {
-//   children: React.ReactNode
-// }) {
-//   return (
-//     <html lang="en" className="scroll-smooth">
-//       <body className="bg-[#0a0a0a] text-gray-100 antialiased">
-//         {children}
-//       </body>
-//     </html>
-//   )
-// }
-
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  const [loadingComplete, setLoadingComplete] = useState(false);
-
   return (
     <html lang="en" className="scroll-smooth">
       <body className="bg-black text-gray-100 antialiased">
-        <SiteLoader onLoadComplete={() => setLoadingComplete(true)} />
-        {loadingComplete && children}
+        <script defer src="https://cloud.umami.is/script.js" data-website-id="4d810ae3-2cfe-421e-a228-a3d23e40292c"></script>
+        <LoaderWrapper>
+          {children}
+        </LoaderWrapper>
       </body>
     </html>
   );
