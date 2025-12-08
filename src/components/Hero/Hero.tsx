@@ -1,43 +1,36 @@
 'use client';
-
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
-
-const heroTitles = [
-  'I design systems that learn, evolve, and deliver meaningful impact.',
-  'Where curiosity meets execution.',
-  'Turning ideas into systems that learn.',
-  'Solving problems at human scale and machine speed.',
-  'Designing clarity in a noisy world.',
-  'Thinking deeply. Building simply.',
-  'Shaping technology with discipline and vision.',
-  'Engineering what the future quietly demands.'
-];
+import { motion, useScroll, useTransform, useMotionValue, useSpring } from 'framer-motion';
+import heroTitles from './hero-titles.json';
 
 const Hero = () => {
-  const [currentTitle, setCurrentTitle] = useState(heroTitles[0]);
+  const [currentTitle, setCurrentTitle] = useState('');
   const [titleIndex, setTitleIndex] = useState(0);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-
   const heroRef = useRef(null);
-
+  
   const { scrollYProgress } = useScroll({
     target: heroRef,
-    offset: ['start start', 'end start']
+    offset: ["start start", "end start"]
   });
 
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
-  const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.85]);
-  const y = useTransform(scrollYProgress, [0, 1], [0, 140]);
+  const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.95]);
+  const y = useTransform(scrollYProgress, [0, 1], [0, 300]);
 
-  // Randomized title on load + gentle cycling
+  // Smooth mouse tracking
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const smoothMouseX = useSpring(mouseX, { stiffness: 50, damping: 20 });
+  const smoothMouseY = useSpring(mouseY, { stiffness: 50, damping: 20 });
+
   useEffect(() => {
     const randomIndex = Math.floor(Math.random() * heroTitles.length);
-    setTitleIndex(randomIndex);
     setCurrentTitle(heroTitles[randomIndex]);
+    setTitleIndex(randomIndex);
 
     const interval = setInterval(() => {
-      setTitleIndex(prev => {
+      setTitleIndex((prev) => {
         const next = (prev + 1) % heroTitles.length;
         setCurrentTitle(heroTitles[next]);
         return next;
@@ -47,262 +40,399 @@ const Hero = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // Interactive cursor effect
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
+      const { clientX, clientY } = e;
+      const { innerWidth, innerHeight } = window;
+      mouseX.set((clientX / innerWidth - 0.5) * 2);
+      mouseY.set((clientY / innerHeight - 0.5) * 2);
+      
       setMousePosition({
-        x: (e.clientX / window.innerWidth - 0.5) * 25,
-        y: (e.clientY / window.innerHeight - 0.5) * 25
+        x: (clientX / innerWidth - 0.5) * 40,
+        y: (clientY / innerHeight - 0.5) * 40
       });
     };
-
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
+  }, [mouseX, mouseY]);
 
   return (
-    <div
-      ref={heroRef}
-      className="relative min-h-screen bg-black text-white overflow-hidden flex items-center justify-center"
+    <div 
+      ref={heroRef} 
+      style={{
+        position: 'relative',
+        minHeight: '100vh',
+        background: 'black',
+        color: 'white',
+        overflow: 'hidden',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}
     >
-
-      {/* Left orb */}
+      {/* Dynamic 3D grid background */}
       <motion.div
         style={{
-          x: mousePosition.x,
-          y: mousePosition.y,
-          width: '600px',
-          height: '600px',
-          background: 'radial-gradient(circle, rgba(59,130,246,0.35), rgba(147,51,234,0.25))',
-          filter: 'blur(110px)',
           position: 'absolute',
-          top: '25%',
-          left: '-25%',
-          borderRadius: '50%',
-          opacity: 0.9
+          inset: 0,
+          backgroundImage: 'linear-gradient(rgba(59, 130, 246, 0.08) 2px, transparent 2px), linear-gradient(90deg, rgba(59, 130, 246, 0.08) 2px, transparent 2px)',
+          backgroundSize: '80px 80px',
+          transform: 'perspective(1000px) rotateX(60deg) scale(2)',
+          transformOrigin: 'center bottom',
+          opacity: 0.4
         }}
-        animate={{ scale: [1, 1.06, 1] }}
-        transition={{ duration: 6, repeat: Infinity }}
+        animate={{
+          backgroundPosition: ['0px 0px', '80px 80px']
+        }}
+        transition={{
+          duration: 20,
+          repeat: Infinity,
+          ease: "linear"
+        }}
       />
 
-      {/* Right orb */}
-      <motion.div
-        style={{
-          x: -mousePosition.x,
-          y: -mousePosition.y,
+      {/* Floating orbs with parallax */}
+      <motion.div 
+        style={{ 
+          x: useTransform(smoothMouseX, [-1, 1], [-100, 100]),
+          y: useTransform(smoothMouseY, [-1, 1], [-100, 100]),
+          position: 'absolute',
+          top: '10%',
+          left: '5%',
           width: '600px',
           height: '600px',
-          background: 'radial-gradient(circle, rgba(147,51,234,0.35), rgba(236,72,153,0.25))',
-          filter: 'blur(110px)',
-          position: 'absolute',
-          bottom: '25%',
-          right: '-25%',
-          borderRadius: '50%',
-          opacity: 0.9
+          background: 'radial-gradient(circle, rgba(59, 130, 246, 0.25), transparent 70%)',
+          filter: 'blur(100px)',
+          borderRadius: '50%'
         }}
-        animate={{ scale: [1, 1.05, 1] }}
-        transition={{ duration: 6, repeat: Infinity, delay: 1.5 }}
+        animate={{
+          scale: [1, 1.2, 1],
+          opacity: [0.3, 0.5, 0.3]
+        }}
+        transition={{ duration: 8, repeat: Infinity }}
+      />
+      
+      <motion.div 
+        style={{ 
+          x: useTransform(smoothMouseX, [-1, 1], [100, -100]),
+          y: useTransform(smoothMouseY, [-1, 1], [100, -100]),
+          position: 'absolute',
+          bottom: '10%',
+          right: '5%',
+          width: '700px',
+          height: '700px',
+          background: 'radial-gradient(circle, rgba(139, 92, 246, 0.25), transparent 70%)',
+          filter: 'blur(120px)',
+          borderRadius: '50%'
+        }}
+        animate={{
+          scale: [1, 1.3, 1],
+          opacity: [0.3, 0.5, 0.3]
+        }}
+        transition={{ duration: 10, repeat: Infinity, delay: 2 }}
       />
 
-      {/* Main container */}
-      <motion.div
+      {/* Particle system */}
+      {[...Array(20)].map((_, i) => (
+        <motion.div
+          key={i}
+          style={{
+            position: 'absolute',
+            width: '4px',
+            height: '4px',
+            background: i % 2 === 0 ? 'rgb(59, 130, 246)' : 'rgb(139, 92, 246)',
+            borderRadius: '50%',
+            left: Math.random() * 100 + '%',
+            top: Math.random() * 100 + '%',
+            boxShadow: '0 0 20px currentColor'
+          }}
+          animate={{
+            y: [0, -30, 0],
+            opacity: [0, 1, 0],
+            scale: [0, 1, 0]
+          }}
+          transition={{
+            duration: 3 + Math.random() * 2,
+            repeat: Infinity,
+            delay: Math.random() * 5,
+            ease: "easeInOut"
+          }}
+        />
+      ))}
+
+      <motion.div 
         style={{ opacity, scale, y }}
         className="relative z-10 max-w-7xl mx-auto px-6 text-center"
       >
-
-        {/* Title */}
-        <div className="mb-10 overflow-hidden">
-          <AnimatePresence mode="wait">
-            <motion.h1
-              key={titleIndex}
-              initial={{ y: 120, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: -120, opacity: 0 }}
-              transition={{
-                duration: 0.85,
-                ease: [0.16, 1, 0.3, 1]
-              }}
-              className="font-light"
+        {/* Animated title with letter reveal */}
+        <div style={{ marginBottom: '40px', overflow: 'hidden' }}>
+          <motion.div
+            key={titleIndex}
+            initial={{ y: 100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -100, opacity: 0 }}
+            transition={{ 
+              duration: 1, 
+              ease: [0.22, 1, 0.36, 1]
+            }}
+            style={{
+              fontSize: 'clamp(48px, 12vw, 140px)',
+              fontWeight: '700',
+              letterSpacing: '-0.05em',
+              lineHeight: 0.95,
+              fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif',
+              background: 'linear-gradient(135deg, #ffffff 0%, rgba(255,255,255,0.6) 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+              textShadow: '0 0 80px rgba(255,255,255,0.1)',
+              position: 'relative'
+            }}
+          >
+            {currentTitle}
+            
+            {/* Animated underline */}
+            <motion.div
+              initial={{ scaleX: 0 }}
+              animate={{ scaleX: 1 }}
+              transition={{ duration: 1, delay: 0.5 }}
               style={{
-                fontSize: 'clamp(2.8rem, 8vw, 6.5rem)',
-                letterSpacing: '-0.035em',
-                lineHeight: 1.05,
-                textShadow: '0 0 100px rgba(255,255,255,0.1)'
+                position: 'absolute',
+                bottom: '-20px',
+                left: '10%',
+                right: '10%',
+                height: '4px',
+                background: 'linear-gradient(90deg, transparent, rgb(59, 130, 246), rgb(139, 92, 246), transparent)',
+                transformOrigin: 'center'
               }}
-            >
-              {currentTitle}
-            </motion.h1>
-          </AnimatePresence>
+            />
+          </motion.div>
         </div>
 
-        {/* Subtitle */}
+        {/* Animated subtitle with stagger */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.3, duration: 1 }}
-          className="mb-16"
+          transition={{ delay: 0.5, duration: 1 }}
+          style={{ marginBottom: '60px' }}
         >
-          <div
-            className="flex flex-wrap justify-center gap-3"
-            style={{
-              fontSize: 'clamp(1rem, 2vw, 1.35rem)',
-              color: 'rgb(156,163,175)',
-              fontWeight: 300
-            }}
-          >
-            {['AI Engineer', 'Cloud Architect', 'Cybersecurity Specialist'].map(
-              (text, i) => (
-                <motion.span
-                  key={text}
-                  initial={{ opacity: 0, y: 15 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.55 + i * 0.1, duration: 0.5 }}
-                >
-                  {text}
-                  {i < 2 && (
-                    <span
-                      style={{
-                        margin: '0 0.6rem',
-                        color: 'rgb(59,130,246)'
-                      }}
-                    >
-                      ·
-                    </span>
-                  )}
-                </motion.span>
-              )
-            )}
+          <div style={{ 
+            display: 'flex', 
+            flexWrap: 'wrap', 
+            justifyContent: 'center', 
+            gap: '20px',
+            fontSize: 'clamp(16px, 3vw, 24px)',
+            color: 'rgb(156, 163, 175)',
+            fontWeight: '400',
+            fontFamily: 'SF Pro Text, -apple-system, sans-serif'
+          }}>
+            {["AI Engineer", "Cloud Architect", "Cybersecurity Specialist"].map((text, i) => (
+              <motion.span
+                key={text}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.7 + i * 0.15, duration: 0.8 }}
+                style={{
+                  position: 'relative',
+                  padding: '8px 0'
+                }}
+              >
+                {text}
+                {i < 2 && (
+                  <span style={{ 
+                    margin: '0 20px', 
+                    color: 'rgb(59, 130, 246)',
+                    fontSize: '8px',
+                    verticalAlign: 'middle'
+                  }}>●</span>
+                )}
+                
+                <motion.div
+                  initial={{ scaleX: 0 }}
+                  whileHover={{ scaleX: 1 }}
+                  style={{
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    height: '2px',
+                    background: 'linear-gradient(90deg, rgb(59, 130, 246), rgb(139, 92, 246))',
+                    transformOrigin: 'left'
+                  }}
+                />
+              </motion.span>
+            ))}
           </div>
         </motion.div>
 
-        {/* Quote */}
+        {/* Quote with glassmorphism */}
         <motion.div
-          initial={{ opacity: 0, y: 25 }}
+          initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8, duration: 0.8 }}
-          className="max-w-4xl mx-auto mb-20"
+          transition={{ delay: 1.2, duration: 1 }}
+          style={{ maxWidth: '900px', margin: '0 auto 80px' }}
         >
-          <div
-            style={{
-              position: 'relative',
-              padding: '2.5rem',
-              backdropFilter: 'blur(16px)',
-              backgroundColor: 'rgba(255,255,255,0.025)',
-              borderRadius: '1.5rem',
-              border: '1px solid rgba(255,255,255,0.06)'
-            }}
-          >
-            <blockquote
-              style={{
-                position: 'relative',
-                fontSize: 'clamp(1rem, 2vw, 1.25rem)',
-                lineHeight: 1.7,
-                color: 'rgb(209,213,219)',
-                fontWeight: 300,
-                fontStyle: 'italic'
-              }}
-            >
-              <span
-                style={{
-                  position: 'absolute',
-                  top: '-0.6rem',
-                  left: '-0.6rem',
-                  fontSize: '2rem',
-                  color: 'rgba(59,130,246,0.35)'
-                }}
-              >
-                "
-              </span>
-              This website is a collaboration between me and the machines I work
-              with. Because mastery today isn't about avoiding AI. It's about
-              directing it with intention, taste, and vision.
-              <span
-                style={{
-                  position: 'absolute',
-                  bottom: '-1.2rem',
-                  right: '-0.5rem',
-                  fontSize: '2rem',
-                  color: 'rgba(59,130,246,0.35)'
-                }}
-              >
-                "
-              </span>
+          <div style={{
+            position: 'relative',
+            padding: '48px',
+            background: 'rgba(255, 255, 255, 0.02)',
+            backdropFilter: 'blur(20px)',
+            border: '1px solid rgba(255, 255, 255, 0.05)',
+            borderRadius: '32px',
+            boxShadow: '0 20px 60px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
+          }}>
+            {/* Accent gradient border */}
+            <div style={{
+              position: 'absolute',
+              inset: 0,
+              padding: '2px',
+              background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(139, 92, 246, 0.3))',
+              borderRadius: '32px',
+              WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+              WebkitMaskComposite: 'xor',
+              maskComposite: 'exclude',
+              opacity: 0.5
+            }} />
+
+            <blockquote style={{
+              fontSize: 'clamp(16px, 2.5vw, 22px)',
+              lineHeight: 1.8,
+              color: 'rgb(209, 213, 219)',
+              fontWeight: '300',
+              fontStyle: 'italic',
+              fontFamily: 'SF Pro Text, -apple-system, sans-serif',
+              position: 'relative'
+            }}>
+              <span style={{ fontSize: '48px', color: 'rgba(59, 130, 246, 0.3)', position: 'absolute', top: '-20px', left: '-10px' }}>"</span>
+              This website is a collaboration between me and the machines I work with.
+              Because mastery today isn't about avoiding AI.
+              It's about directing it with intention, taste, and vision.
+              <span style={{ fontSize: '48px', color: 'rgba(59, 130, 246, 0.3)', position: 'absolute', bottom: '-40px', right: '-10px' }}>"</span>
             </blockquote>
           </div>
         </motion.div>
 
-        {/* CTA Buttons */}
+        {/* CTA Buttons with magnetic effect */}
         <motion.div
-          initial={{ opacity: 0, y: 25 }}
+          initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.15, duration: 0.8 }}
-          className="flex flex-col sm:flex-row gap-6 justify-center items-center"
+          transition={{ delay: 1.6, duration: 1 }}
+          style={{
+            display: 'flex',
+            flexDirection: window.innerWidth < 640 ? 'column' : 'row',
+            gap: '24px',
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}
         >
           <motion.a
             href="#projects"
-            whileHover={{ scale: 1.05, y: -3 }}
-            whileTap={{ scale: 0.96 }}
-            className="text-white"
+            whileHover={{ scale: 1.05, y: -4 }}
+            whileTap={{ scale: 0.95 }}
             style={{
-              padding: '1.2rem 3rem',
-              borderRadius: '9999px',
-              background:
-                'linear-gradient(to right, rgb(59,130,246), rgb(147,51,234))',
-              fontWeight: 500,
-              fontSize: '1.125rem',
+              position: 'relative',
+              padding: '20px 48px',
+              background: 'linear-gradient(135deg, rgb(59, 130, 246), rgb(139, 92, 246))',
+              borderRadius: '16px',
+              fontSize: '18px',
+              fontWeight: '600',
+              color: 'white',
+              textDecoration: 'none',
+              fontFamily: 'SF Pro Text, -apple-system, sans-serif',
+              boxShadow: '0 20px 60px rgba(59, 130, 246, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1) inset',
+              overflow: 'hidden',
               display: 'flex',
               alignItems: 'center',
-              gap: '0.5rem',
-              boxShadow: '0 20px 40px -10px rgba(59,130,246,0.25)'
+              gap: '12px'
             }}
           >
-            View Projects
-            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                strokeWidth={2}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M17 8l4 4m0 0l-4 4m4-4H3"
-              />
-            </svg>
+            <span style={{ position: 'relative', zIndex: 10 }}>View Work</span>
+            <motion.svg
+              style={{ width: '20px', height: '20px', position: 'relative', zIndex: 10 }}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              strokeWidth={2.5}
+              whileHover={{ x: 4 }}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </motion.svg>
+            
+            <motion.div
+              animate={{ x: ['-100%', '200%'] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '50%',
+                height: '100%',
+                background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent)',
+                transform: 'skewX(-20deg)'
+              }}
+            />
           </motion.a>
-
+          
           <motion.a
             href="#contact"
-            whileHover={{ scale: 1.05, y: -3 }}
-            whileTap={{ scale: 0.96 }}
+            whileHover={{ scale: 1.05, y: -4 }}
+            whileTap={{ scale: 0.95 }}
             style={{
-              padding: '1.2rem 3rem',
-              borderRadius: '9999px',
-              backdropFilter: 'blur(16px)',
-              backgroundColor: 'rgba(255,255,255,0.05)',
-              border: '1px solid rgba(255,255,255,0.12)',
-              fontWeight: 500,
-              fontSize: '1.125rem',
-              color: 'white'
+              padding: '20px 48px',
+              background: 'rgba(255, 255, 255, 0.05)',
+              backdropFilter: 'blur(20px)',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              borderRadius: '16px',
+              fontSize: '18px',
+              fontWeight: '600',
+              color: 'white',
+              textDecoration: 'none',
+              fontFamily: 'SF Pro Text, -apple-system, sans-serif',
+              boxShadow: '0 10px 30px rgba(0, 0, 0, 0.3)',
+              transition: 'all 0.3s'
             }}
           >
-            Get in Touch
+            Let's Connect
           </motion.a>
         </motion.div>
 
-        {/* Scroll Indicator */}
+        {/* Scroll indicator */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1.4, duration: 1 }}
-          className="mt-28 flex flex-col items-center"
+          transition={{ delay: 2, duration: 1 }}
+          style={{ marginTop: '120px' }}
         >
           <motion.div
+            animate={{ y: [0, 12, 0] }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
             style={{
               width: '2px',
-              height: '5rem',
-              background:
-                'linear-gradient(to bottom, rgba(255,255,255,0.25), transparent)'
+              height: '60px',
+              background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.5), transparent)',
+              margin: '0 auto',
+              position: 'relative'
             }}
-            animate={{ scaleY: [1, 1.2, 1] }}
-            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-          />
+          >
+            <motion.div
+              animate={{
+                scaleY: [0, 1, 0],
+                opacity: [0, 1, 0]
+              }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: '50%',
+                transform: 'translateX(-50%)',
+                width: '8px',
+                height: '8px',
+                background: 'rgb(59, 130, 246)',
+                borderRadius: '50%',
+                boxShadow: '0 0 20px rgb(59, 130, 246)'
+              }}
+            />
+          </motion.div>
         </motion.div>
       </motion.div>
     </div>
