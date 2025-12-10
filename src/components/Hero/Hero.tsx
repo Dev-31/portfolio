@@ -132,7 +132,7 @@ const Hero = () => {
               fontWeight: '600',
               letterSpacing: '-0.04em',
               lineHeight: '1.1',
-              fontFamily: "'Space Grotesk', system-ui, sans-serif",
+              fontFamily: 'Space Grotesk, system-ui, sans-serif',
               background: 'linear-gradient(135deg, #ffffff 40%, rgba(255,255,255,0.7) 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
@@ -152,7 +152,7 @@ const Hero = () => {
               fontSize: 'clamp(18px, 3vw, 28px)',
               fontWeight: '300',
               color: 'rgba(156, 163, 175, 0.9)',
-              fontFamily: "'Inter', system-ui",
+              fontFamily: 'Inter, system-ui, sans-serif',
               letterSpacing: '-0.01em',
               marginBottom: '12px'
             }}
@@ -175,7 +175,7 @@ const Hero = () => {
               fontSize: 'clamp(13px, 1.5vw, 16px)',
               color: 'rgba(156, 163, 175, 0.8)',
               fontWeight: '400',
-              fontFamily: "'Inter', system-ui"
+              fontFamily: 'Inter, system-ui, sans-serif'
             }}>
               {["AI Engineer", "Cloud Architect", "Cybersecurity Specialist"].map((text, i) => (
                 <motion.span
@@ -386,7 +386,7 @@ const Hero = () => {
                 fontWeight: '500',
                 color: '#ffffff',
                 textDecoration: 'none',
-                fontFamily: "'Inter', system-ui",
+                fontFamily: 'Inter, system-ui, sans-serif',
                 boxShadow: '0 4px 20px rgba(59, 130, 246, 0.4)',
                 display: 'inline-flex',
                 alignItems: 'center',
@@ -414,7 +414,7 @@ const Hero = () => {
                 fontWeight: '500',
                 color: '#ffffff',
                 textDecoration: 'none',
-                fontFamily: "'Inter', system-ui"
+                fontFamily: 'Inter, system-ui, sans-serif'
               }}
             >
               Let's Connect
