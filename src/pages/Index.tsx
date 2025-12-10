@@ -1,13 +1,36 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState } from 'react';
+import Hero from '@/components/Hero';
+import Philosophy from '@/components/Philosophy';
+import JourneyTimeline from '@/components/JourneyTimeline';
+import NavigationCards from '@/components/NavigationCards';
+import Values from '@/components/Values';
+import Footer from '@/components/Footer';
+import Navigation from '@/components/Navigation';
+import CursorGlow from '@/components/CursorGlow';
+import Loader from '@/components/Loader';
 
 const Index = () => {
+  const [isLoading, setIsLoading] = useState(true);
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
-    </div>
+    <>
+      {isLoading && <Loader onComplete={() => setIsLoading(false)} />}
+      
+      {!isLoading && (
+        <div className="relative">
+          <CursorGlow />
+          <Navigation />
+          <main>
+            <Hero />
+            <Philosophy />
+            <JourneyTimeline />
+            <NavigationCards />
+            <Values />
+            <Footer />
+          </main>
+        </div>
+      )}
+    </>
   );
 };
 
