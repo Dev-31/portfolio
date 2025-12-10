@@ -85,6 +85,7 @@ const NavigationCard = ({ page, index }: NavigationCardProps) => {
       }}
       style={{ perspective: '1000px' }}
     >
+      {/* FIXED: Removed nested motion elements, just one motion.a */}
       <motion.a
         href={page.href}
         onMouseEnter={() => setIsHovered(true)}
@@ -118,7 +119,8 @@ const NavigationCard = ({ page, index }: NavigationCardProps) => {
             position: 'absolute',
             inset: 0,
             background: page.gradient,
-            filter: 'blur(40px)'
+            filter: 'blur(40px)',
+            pointerEvents: 'none'
           }}
         />
 
@@ -134,7 +136,8 @@ const NavigationCard = ({ page, index }: NavigationCardProps) => {
             background: `linear-gradient(135deg, ${page.iconColor}, transparent)`,
             WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
             WebkitMaskComposite: 'xor',
-            maskComposite: 'exclude'
+            maskComposite: 'exclude',
+            pointerEvents: 'none'
           }}
         />
 
@@ -149,7 +152,8 @@ const NavigationCard = ({ page, index }: NavigationCardProps) => {
             right: 0,
             height: '2px',
             background: page.iconColor,
-            transformOrigin: 'left'
+            transformOrigin: 'left',
+            pointerEvents: 'none'
           }}
         />
 
@@ -166,7 +170,8 @@ const NavigationCard = ({ page, index }: NavigationCardProps) => {
                 borderRadius: '50%',
                 background: page.iconColor,
                 top: '50%',
-                left: '20%'
+                left: '20%',
+                pointerEvents: 'none'
               }}
             />
             <motion.div
@@ -180,7 +185,8 @@ const NavigationCard = ({ page, index }: NavigationCardProps) => {
                 borderRadius: '50%',
                 background: page.iconColor,
                 top: '50%',
-                right: '20%'
+                right: '20%',
+                pointerEvents: 'none'
               }}
             />
           </>
@@ -426,7 +432,7 @@ const PagesNavigation = () => {
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(min(100 percent, 450px), 1fr))',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 450px), 1fr))',
             gap: '2rem',
             maxWidth: '1400px',
             margin: '0 auto'

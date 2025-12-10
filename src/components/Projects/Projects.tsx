@@ -69,30 +69,37 @@ const ProjectCard = ({ project, index }: any) => {
         ease: [0.16, 1, 0.3, 1]
       }}
     >
+      {/* FIXED: Removed nested <a> - now just motion.a */}
       <motion.a
         href={project.github}
         target="_blank"
         rel="noopener noreferrer"
         whileHover={{ scale: 1.03, y: -10 }}
         transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-        className="group block relative"
+        style={{
+          display: 'block',
+          position: 'relative',
+          textDecoration: 'none',
+          color: 'inherit'
+        }}
       >
         <div
           style={{
             position: 'relative',
             backdropFilter: 'blur(28px)',
-            background: `rgba(0,0,0,0.65)`,
+            background: 'rgba(0,0,0,0.65)',
             border: '1px solid rgba(255,255,255,0.08)',
             borderRadius: '1.5rem',
             padding: '2.5rem',
-            boxShadow: `0 25px 50px -12px rgba(0,0,0,0.35)`,
+            boxShadow: '0 25px 50px -12px rgba(0,0,0,0.35)',
             overflow: 'hidden',
             transition: 'all 0.5s'
           }}
+          className="project-card"
         >
           {/* Glow orb */}
           <div
-            className="group-hover:opacity-30"
+            className="project-glow"
             style={{
               position: 'absolute',
               right: '-5rem',
@@ -103,13 +110,14 @@ const ProjectCard = ({ project, index }: any) => {
               background: `radial-gradient(circle, rgba(${r}, ${g}, ${b}, 0.25), transparent)`,
               filter: 'blur(60px)',
               opacity: 0,
-              transition: 'opacity 0.6s'
+              transition: 'opacity 0.6s',
+              pointerEvents: 'none'
             }}
           />
 
           <div style={{ position: 'relative', zIndex: 10 }}>
             {/* Header row */}
-            <div className="flex items-center justify-between mb-6">
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
               <span
                 style={{
                   padding: '0.5rem 1rem',
@@ -148,11 +156,12 @@ const ProjectCard = ({ project, index }: any) => {
 
             {/* Title */}
             <h3
-              className="group-hover:translate-x-2 transition-transform"
+              className="project-title"
               style={{
                 fontSize: 'clamp(1.5rem, 3vw, 2rem)',
                 fontWeight: 300,
-                marginBottom: '1rem'
+                marginBottom: '1rem',
+                transition: 'transform 0.3s'
               }}
             >
               {project.title}
@@ -172,7 +181,7 @@ const ProjectCard = ({ project, index }: any) => {
             </p>
 
             {/* Tags */}
-            <div className="flex flex-wrap gap-3 mb-8">
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', marginBottom: '2rem' }}>
               {project.tags.map((tag: string, tagIndex: number) => (
                 <motion.span
                   key={tag}
@@ -192,7 +201,7 @@ const ProjectCard = ({ project, index }: any) => {
                     color: 'rgb(209,213,219)',
                     transition: 'all 0.3s'
                   }}
-                  className="hover:bg-white/10"
+                  className="project-tag"
                 >
                   {tag}
                 </motion.span>
@@ -201,8 +210,15 @@ const ProjectCard = ({ project, index }: any) => {
 
             {/* CTA */}
             <div
-              className="group-hover:gap-3 transition-all"
-              style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: `rgb(${r}, ${g}, ${b})`, fontWeight: 500 }}
+              className="project-cta"
+              style={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: '0.5rem', 
+                color: `rgb(${r}, ${g}, ${b})`, 
+                fontWeight: 500,
+                transition: 'gap 0.3s'
+              }}
             >
               View Project
               <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -212,6 +228,21 @@ const ProjectCard = ({ project, index }: any) => {
           </div>
         </div>
       </motion.a>
+
+      <style jsx>{`
+        .project-card:hover .project-glow {
+          opacity: 0.3;
+        }
+        .project-card:hover .project-title {
+          transform: translateX(8px);
+        }
+        .project-card:hover .project-cta {
+          gap: 12px;
+        }
+        .project-tag:hover {
+          background-color: rgba(255,255,255,0.1);
+        }
+      `}</style>
     </motion.div>
   );
 };
@@ -224,44 +255,55 @@ const Projects = () => {
     <section
       ref={sectionRef}
       id="projects"
-      className="relative bg-black px-6 py-40 overflow-hidden"
+      style={{
+        position: 'relative',
+        background: 'black',
+        padding: '10rem 1.5rem',
+        overflow: 'hidden'
+      }}
     >
       {/* Background gradients */}
       <div
-        className="absolute rounded-full blur-[150px]"
         style={{
+          position: 'absolute',
           top: 0,
           left: '25%',
           width: '600px',
           height: '600px',
-          background: 'radial-gradient(circle, rgba(59,130,246,0.1), transparent)'
+          background: 'radial-gradient(circle, rgba(59,130,246,0.1), transparent)',
+          borderRadius: '50%',
+          filter: 'blur(150px)'
         }}
       />
       <div
-        className="absolute rounded-full blur-[150px]"
         style={{
+          position: 'absolute',
           bottom: 0,
           right: '25%',
           width: '600px',
           height: '600px',
-          background: 'radial-gradient(circle, rgba(147,51,234,0.1), transparent)'
+          background: 'radial-gradient(circle, rgba(147,51,234,0.1), transparent)',
+          borderRadius: '50%',
+          filter: 'blur(150px)'
         }}
       />
 
-      <div className="relative max-w-7xl mx-auto z-10">
+      <div style={{ position: 'relative', maxWidth: '1792px', margin: '0 auto', zIndex: 10 }}>
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
-          className="text-center mb-24"
+          style={{ textAlign: 'center', marginBottom: '6rem' }}
         >
           <motion.div
             initial={{ scaleX: 0 }}
             animate={isInView ? { scaleX: 1 } : {}}
             transition={{ duration: 1, delay: 0.2 }}
-            className="mx-auto mb-6 h-[2px] w-24"
             style={{
+              margin: '0 auto 1.5rem',
+              height: '2px',
+              width: '6rem',
               background: 'linear-gradient(to right, rgb(59,130,246), rgb(147,51,234))'
             }}
           />
@@ -273,19 +315,28 @@ const Projects = () => {
               letterSpacing: '-0.03em',
               background: 'linear-gradient(to right, white, rgb(107,114,128))',
               WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
               color: 'transparent'
             }}
           >
             Selected Work
           </h2>
 
-          <p className="mx-auto mt-6 max-w-3xl text-gray-400 text-xl font-light leading-relaxed">
+          <p style={{ 
+            margin: '1.5rem auto 0', 
+            maxWidth: '48rem', 
+            color: 'rgb(156,163,175)', 
+            fontSize: '1.25rem', 
+            fontWeight: 300, 
+            lineHeight: 1.7 
+          }}>
             Building systems that solve real problems at the intersection of AI, security, and infrastructure.
           </p>
         </motion.div>
 
         {/* Project list */}
-        <div className="flex flex-col gap-12">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '3rem' }}>
           {projects.map((project, index) => (
             <ProjectCard key={project.title} project={project} index={index} />
           ))}
