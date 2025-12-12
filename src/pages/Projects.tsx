@@ -1,9 +1,8 @@
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import CursorGlow from '@/components/CursorGlow';
-import { ArrowRight, Github, ExternalLink } from 'lucide-react';
+import { Github } from 'lucide-react';
 
 interface Project {
   id: string;
@@ -121,18 +120,11 @@ const Projects = () => {
                       href={project.github}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-2 px-5 py-3 glass rounded-full hover:bg-accent hover:text-accent-foreground transition-all"
+                      className="flex items-center gap-2 px-5 py-3 bg-foreground text-background rounded-full hover:bg-accent transition-all"
                     >
                       <Github className="w-4 h-4" />
                       <span className="text-sm font-body">View Code</span>
                     </a>
-                    <Link
-                      to={`/projects/${project.id}`}
-                      className="flex items-center gap-2 px-5 py-3 bg-foreground text-background rounded-full hover:bg-accent transition-all"
-                    >
-                      <span className="text-sm font-body">Case Study</span>
-                      <ArrowRight className="w-4 h-4" />
-                    </Link>
                   </div>
                 </div>
               </motion.div>
