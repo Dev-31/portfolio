@@ -203,10 +203,10 @@ const Contact = () => {
               Prefer email directly?
             </p>
             <a
-              href="mailto:devsopariwala22@gmail.com"
+              href="mailto:hello@devsopariwala.com"
               className="text-accent hover:underline font-body"
             >
-              devsopariwala22@gmail.com
+              hello@devsopariwala.com
             </a>
           </motion.div>
         </div>
