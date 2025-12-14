@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
-import CursorGlow from '@/components/CursorGlow';
 import { Send, CheckCircle, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
@@ -58,7 +57,6 @@ const Contact = () => {
 
   return (
     <div className="relative min-h-screen">
-      <CursorGlow />
       <Navigation />
       
       <main className="pt-32 pb-24 px-6">
