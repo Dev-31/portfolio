@@ -1,7 +1,6 @@
 import { motion } from 'framer-motion';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
-import CursorGlow from '@/components/CursorGlow';
 import { Calendar, MapPin, Building } from 'lucide-react';
 
 interface Experience {
@@ -66,7 +65,6 @@ const experiences: Experience[] = [
 const Experience = () => {
   return (
     <div className="relative min-h-screen">
-      <CursorGlow />
       <Navigation />
       
       <main className="pt-32 pb-24 px-6">
