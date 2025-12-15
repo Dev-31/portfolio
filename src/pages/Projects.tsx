@@ -1,9 +1,7 @@
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
-import CursorGlow from '@/components/CursorGlow';
-import { ArrowRight, Github, ExternalLink } from 'lucide-react';
+import { Github } from 'lucide-react';
 
 interface Project {
   id: string;
@@ -57,7 +55,6 @@ const projects: Project[] = [
 const Projects = () => {
   return (
     <div className="relative min-h-screen">
-      <CursorGlow />
       <Navigation />
       
       <main className="pt-32 pb-24 px-6">
@@ -126,13 +123,6 @@ const Projects = () => {
                       <Github className="w-4 h-4" />
                       <span className="text-sm font-body">View Code</span>
                     </a>
-                    <Link
-                      to={`/projects/${project.id}`}
-                      className="flex items-center gap-2 px-5 py-3 bg-foreground text-background rounded-full hover:bg-accent transition-all"
-                    >
-                      <span className="text-sm font-body">Case Study</span>
-                      <ArrowRight className="w-4 h-4" />
-                    </Link>
                   </div>
                 </div>
               </motion.div>
