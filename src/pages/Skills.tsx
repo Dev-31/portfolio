@@ -10,10 +10,6 @@ interface SkillCategory {
 
 const skillCategories: SkillCategory[] = [
   {
-    name: "Web Development",
-    skills: ["React", "TypeScript", "Tailwind CSS", "HTML/CSS", "JavaScript", "Node.js", "REST APIs", "Next.js"]
-  },
-  {
     name: "AI & Machine Learning",
     skills: ["TensorFlow", "Scikit-learn", "GenAI", "AWS Bedrock", "RAG Architecture", "Deep Learning", "CNN/RNN/LSTM", "OpenCV"]
   },

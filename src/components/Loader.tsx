@@ -6,120 +6,128 @@ interface LoaderProps {
 }
 
 const Loader = ({ onComplete }: LoaderProps) => {
-  const [phase, setPhase] = useState<'logo' | 'name' | 'tagline' | 'exit'>('logo');
+  const [progress, setProgress] = useState(0);
+  const [isExiting, setIsExiting] = useState(false);
 
   useEffect(() => {
-    const timers = [
-      setTimeout(() => setPhase('name'), 800),
-      setTimeout(() => setPhase('tagline'), 2000),
-      setTimeout(() => setPhase('exit'), 2800),
-      setTimeout(onComplete, 3400),
-    ];
-    return () => timers.forEach(clearTimeout);
+    const interval = setInterval(() => {
+      setProgress(prev => {
+        if (prev >= 100) {
+          clearInterval(interval);
+          setTimeout(() => setIsExiting(true), 300);
+          setTimeout(onComplete, 1200);
+          return 100;
+        }
+        return prev + Math.random() * 15 + 5;
+      });
+    }, 100);
+
+    return () => clearInterval(interval);
   }, [onComplete]);
 
-  const nameLetters = "DEV SOPARIWALA".split('');
+  const letters = "DEV SOPARIWALA".split('');
 
   return (
     <AnimatePresence>
-      {phase !== 'exit' && (
+      {!isExiting && (
         <motion.div
           className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-background"
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
+          exit={{ opacity: 0, scale: 1.1 }}
+          transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
         >
-          {/* Subtle grid background */}
-          <div className="absolute inset-0 opacity-[0.02]">
-            <svg width="100%" height="100%">
-              <defs>
-                <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
-                  <path d="M 60 0 L 0 0 0 60" fill="none" stroke="currentColor" strokeWidth="1"/>
-                </pattern>
-              </defs>
-              <rect width="100%" height="100%" fill="url(#grid)" />
-            </svg>
+          {/* Animated background particles */}
+          <div className="absolute inset-0 overflow-hidden">
+            {[...Array(20)].map((_, i) => (
+              <motion.div
+                key={i}
+                className="absolute w-1 h-1 rounded-full bg-accent/30"
+                initial={{
+                  x: Math.random() * window.innerWidth,
+                  y: Math.random() * window.innerHeight,
+                  scale: 0,
+                }}
+                animate={{
+                  y: [null, Math.random() * window.innerHeight],
+                  scale: [0, 1, 0],
+                  opacity: [0, 0.8, 0],
+                }}
+                transition={{
+                  duration: 2 + Math.random() * 2,
+                  repeat: Infinity,
+                  delay: Math.random() * 2,
+                }}
+              />
+            ))}
           </div>
 
-          <div className="relative z-10 flex flex-col items-center gap-6">
-            {/* DS Monogram Logo */}
-            <motion.div
-              className="relative w-20 h-20 md:w-24 md:h-24"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
+          {/* Main content */}
+          <div className="relative z-10 flex flex-col items-center gap-8">
+            {/* Animated name */}
+            <div className="flex gap-1 md:gap-2 overflow-hidden">
+              {letters.map((letter, index) => (
+                <motion.span
+                  key={index}
+                  className="text-3xl md:text-5xl lg:text-6xl font-display font-bold text-foreground"
+                  initial={{ y: 100, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{
+                    duration: 0.5,
+                    delay: index * 0.05,
+                    ease: [0.23, 1, 0.32, 1],
+                  }}
+                >
+                  {letter === ' ' ? '\u00A0' : letter}
+                </motion.span>
+              ))}
+            </div>
+
+            {/* Subtitle */}
+            <motion.p
+              className="text-muted-foreground font-body text-sm md:text-base tracking-widest uppercase"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.8 }}
             >
-              <svg viewBox="0 0 100 100" className="w-full h-full">
-                {/* D shape */}
-                <motion.path
-                  d="M 20 15 L 20 85 L 45 85 C 70 85 80 65 80 50 C 80 35 70 15 45 15 L 20 15"
-                  fill="none"
-                  stroke="hsl(var(--foreground))"
-                  strokeWidth="3"
-                  strokeLinecap="round"
-                  initial={{ pathLength: 0 }}
-                  animate={{ pathLength: 1 }}
-                  transition={{ duration: 0.8, ease: "easeOut" }}
-                />
-                {/* S shape overlay */}
-                <motion.path
-                  d="M 65 30 C 50 30 40 35 40 45 C 40 55 50 55 60 55 C 70 55 75 60 75 70 C 75 80 65 85 50 85"
-                  fill="none"
-                  stroke="hsl(var(--accent))"
-                  strokeWidth="3"
-                  strokeLinecap="round"
-                  initial={{ pathLength: 0 }}
-                  animate={{ pathLength: 1 }}
-                  transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
-                />
-              </svg>
+              Building intelligent systems
+            </motion.p>
+
+            {/* Progress bar */}
+            <motion.div
+              className="w-48 md:w-64 h-[2px] bg-border rounded-full overflow-hidden mt-4"
+              initial={{ opacity: 0, scaleX: 0 }}
+              animate={{ opacity: 1, scaleX: 1 }}
+              transition={{ delay: 1 }}
+            >
+              <motion.div
+                className="h-full bg-accent"
+                style={{ width: `${Math.min(progress, 100)}%` }}
+                transition={{ duration: 0.1 }}
+              />
             </motion.div>
 
-            {/* Name reveal - letter by letter */}
-            {(phase === 'name' || phase === 'tagline') && (
-              <div className="flex gap-[2px] md:gap-1 overflow-hidden">
-                {nameLetters.map((letter, index) => (
-                  <motion.span
-                    key={index}
-                    className="text-2xl md:text-4xl lg:text-5xl font-display font-bold text-foreground"
-                    initial={{ y: 50, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{
-                      duration: 0.4,
-                      delay: index * 0.04,
-                      ease: [0.23, 1, 0.32, 1],
-                    }}
-                  >
-                    {letter === ' ' ? '\u00A0' : letter}
-                  </motion.span>
-                ))}
-              </div>
-            )}
-
-            {/* Tagline */}
-            {phase === 'tagline' && (
-              <motion.p
-                className="text-muted-foreground font-body text-sm md:text-base tracking-[0.2em] uppercase"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, ease: "easeOut" }}
-              >
-                Built with intention
-              </motion.p>
-            )}
+            {/* Loading text */}
+            <motion.span
+              className="text-xs text-muted-foreground font-mono"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1.2 }}
+            >
+              {Math.min(Math.round(progress), 100)}%
+            </motion.span>
           </div>
 
           {/* Decorative corner elements */}
           <motion.div
-            className="absolute top-8 left-8 w-12 h-12 border-l border-t border-border/30"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3 }}
+            className="absolute top-8 left-8 w-16 h-16 border-l-2 border-t-2 border-accent/30"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.5 }}
           />
           <motion.div
-            className="absolute bottom-8 right-8 w-12 h-12 border-r border-b border-border/30"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3 }}
+            className="absolute bottom-8 right-8 w-16 h-16 border-r-2 border-b-2 border-accent/30"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.5 }}
           />
         </motion.div>
       )}

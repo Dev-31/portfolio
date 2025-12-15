@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
-import ThemeToggle from './ThemeToggle';
 
 const navLinks = [
   { name: 'Home', href: '/' },
@@ -61,27 +60,21 @@ const Navigation = () => {
             ))}
           </div>
 
-          {/* Right side - Theme toggle + Resume */}
-          <div className="hidden md:flex items-center gap-4">
-            <ThemeToggle />
-            <Link
-              to="/resumes"
-              className="px-5 py-2 text-sm font-body tracking-wide border border-border rounded-full hover:border-accent hover:text-accent transition-all"
-            >
-              Resumes
-            </Link>
-          </div>
+          {/* Resume button */}
+          <Link
+            to="/resumes"
+            className="hidden md:block px-5 py-2 text-sm font-body tracking-wide border border-border rounded-full hover:border-accent hover:text-accent transition-all"
+          >
+            Resumes
+          </Link>
 
           {/* Mobile menu button */}
-          <div className="md:hidden flex items-center gap-2">
-            <ThemeToggle />
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="p-2"
-            >
-              {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
-          </div>
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="md:hidden p-2"
+          >
+            {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
         </div>
       </motion.nav>
 

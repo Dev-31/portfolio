@@ -8,7 +8,6 @@ import Footer from '@/components/Footer';
 import Navigation from '@/components/Navigation';
 import CursorGlow from '@/components/CursorGlow';
 import Loader from '@/components/Loader';
-import FloatingNodes from '@/components/FloatingNodes';
 
 const Index = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -19,7 +18,6 @@ const Index = () => {
       
       {!isLoading && (
         <div className="relative">
-          <FloatingNodes />
           <CursorGlow />
           <Navigation />
           <main>

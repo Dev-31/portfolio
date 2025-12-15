@@ -56,12 +56,22 @@ const Hero = () => {
       </svg>
 
       <div className="relative z-10 text-center max-w-5xl mx-auto">
+        {/* Overline */}
+        <motion.p
+          className="text-accent font-body text-sm md:text-base tracking-[0.3em] uppercase mb-6"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+        >
+          Portfolio 2025
+        </motion.p>
+
         {/* Name with shadow effect */}
         <motion.div
           className="relative mb-8"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
         >
           <h1 className="text-5xl md:text-7xl lg:text-8xl xl:text-9xl font-display font-bold tracking-tight text-shadow-deep">
             DEV SOPARIWALA
@@ -105,7 +115,7 @@ const Hero = () => {
           className="text-muted-foreground font-body text-sm md:text-base tracking-wide mb-16"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
+          transition={{ duration: 0.8, delay: 0.8 }}
         >
           Exploring the intersection of AI, Cloud Systems, and Strategic Thinking
         </motion.p>
@@ -115,7 +125,7 @@ const Hero = () => {
           className="flex flex-col sm:flex-row gap-4 justify-center items-center"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.8 }}
+          transition={{ duration: 0.8, delay: 1 }}
         >
           <a
             href="#journey"
@@ -124,7 +134,7 @@ const Hero = () => {
             Explore My Journey
           </a>
           <a
-            href="/contact"
+            href="#contact"
             className="px-8 py-4 border border-border text-foreground font-display font-medium tracking-wide rounded-full hover:border-accent hover:text-accent transition-all duration-300"
           >
             Get In Touch
@@ -132,14 +142,14 @@ const Hero = () => {
         </motion.div>
       </div>
 
-      {/* Scroll indicator - fixed for mobile with proper z-index and spacing */}
+      {/* Scroll indicator */}
       <motion.button
         onClick={scrollToNext}
-        className="absolute bottom-12 md:bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-muted-foreground hover:text-accent transition-colors z-20"
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-muted-foreground hover:text-accent transition-colors"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1, y: [0, 10, 0] }}
         transition={{ 
-          opacity: { delay: 1.2 },
+          opacity: { delay: 1.5 },
           y: { repeat: Infinity, duration: 2 }
         }}
       >
