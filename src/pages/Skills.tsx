@@ -1,7 +1,6 @@
 import { motion } from 'framer-motion';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
-import CursorGlow from '@/components/CursorGlow';
 
 interface SkillCategory {
   name: string;
@@ -9,6 +8,10 @@ interface SkillCategory {
 }
 
 const skillCategories: SkillCategory[] = [
+  {
+    name: "Web Development",
+    skills: ["React", "TypeScript", "Tailwind CSS", "HTML/CSS", "JavaScript", "Node.js", "REST APIs", "Next.js"]
+  },
   {
     name: "AI & Machine Learning",
     skills: ["TensorFlow", "Scikit-learn", "GenAI", "AWS Bedrock", "RAG Architecture", "Deep Learning", "CNN/RNN/LSTM", "OpenCV"]
@@ -20,10 +23,6 @@ const skillCategories: SkillCategory[] = [
   {
     name: "Cybersecurity",
     skills: ["Intrusion Detection Systems", "Network Security", "Vulnerability Assessment", "Incident Response", "DDoS Detection", "Cryptography"]
-  },
-  {
-    name: "Programming",
-    skills: ["Python", "Java", "C++", "SQL", "Bash/Shell", "JavaScript", "HTML/CSS", "React"]
   },
   {
     name: "Data & Analytics",
@@ -38,7 +37,6 @@ const skillCategories: SkillCategory[] = [
 const Skills = () => {
   return (
     <div className="relative min-h-screen">
-      <CursorGlow />
       <Navigation />
       
       <main className="pt-32 pb-24 px-6">

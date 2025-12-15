@@ -29,64 +29,40 @@ const Hero = () => {
 
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-center px-6 overflow-hidden">
-      {/* Background gradient */}
-      <div className="absolute inset-0 gradient-radial opacity-50" />
-      
-      {/* Topographic pattern */}
-      <svg
-        className="absolute inset-0 w-full h-full opacity-[0.03]"
-        viewBox="0 0 1000 1000"
-        preserveAspectRatio="xMidYMid slice"
-      >
-        {[...Array(20)].map((_, i) => (
-          <motion.ellipse
-            key={i}
-            cx="500"
-            cy="500"
-            rx={100 + i * 45}
-            ry={80 + i * 35}
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1"
-            initial={{ pathLength: 0, opacity: 0 }}
-            animate={{ pathLength: 1, opacity: 1 }}
-            transition={{ duration: 2, delay: i * 0.1 }}
-          />
-        ))}
-      </svg>
+      {/* Subtle grid background */}
+      <div className="absolute inset-0 opacity-[0.02]">
+        <div 
+          className="w-full h-full"
+          style={{
+            backgroundImage: `linear-gradient(hsl(var(--foreground)) 1px, transparent 1px),
+                              linear-gradient(90deg, hsl(var(--foreground)) 1px, transparent 1px)`,
+            backgroundSize: '60px 60px'
+          }}
+        />
+      </div>
 
       <div className="relative z-10 text-center max-w-5xl mx-auto">
-        {/* Overline */}
-        <motion.p
-          className="text-accent font-body text-sm md:text-base tracking-[0.3em] uppercase mb-6"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-        >
-          Portfolio 2025
-        </motion.p>
-
-        {/* Name with shadow effect */}
+        {/* Name with cinematic shadow effect */}
         <motion.div
           className="relative mb-8"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
         >
           <h1 className="text-5xl md:text-7xl lg:text-8xl xl:text-9xl font-display font-bold tracking-tight text-shadow-deep">
-            DEV SOPARIWALA
+            Dev Sopariwala
           </h1>
           {/* Shadow duplicate for depth */}
           <h1 
             className="absolute inset-0 text-5xl md:text-7xl lg:text-8xl xl:text-9xl font-display font-bold tracking-tight text-accent/10 blur-sm -z-10"
-            style={{ transform: 'translate(8px, 8px)' }}
+            style={{ transform: 'translate(6px, 6px)' }}
           >
-            DEV SOPARIWALA
+            Dev Sopariwala
           </h1>
         </motion.div>
 
         {/* Dynamic rotating title with shadow */}
-        <div className="h-24 md:h-20 flex items-center justify-center mb-12">
+        <div className="h-24 md:h-20 flex items-center justify-center mb-8">
           <AnimatePresence mode="wait">
             <motion.div
               key={currentTitleIndex}
@@ -112,20 +88,20 @@ const Hero = () => {
 
         {/* Subtitle */}
         <motion.p
-          className="text-muted-foreground font-body text-sm md:text-base tracking-wide mb-16"
+          className="text-muted-foreground font-body text-sm md:text-base tracking-wide mb-12"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.8 }}
+          transition={{ duration: 0.8, delay: 0.6 }}
         >
           Exploring the intersection of AI, Cloud Systems, and Strategic Thinking
         </motion.p>
 
         {/* CTA Buttons */}
         <motion.div
-          className="flex flex-col sm:flex-row gap-4 justify-center items-center"
+          className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-24"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1 }}
+          transition={{ duration: 0.8, delay: 0.8 }}
         >
           <a
             href="#journey"
@@ -142,14 +118,14 @@ const Hero = () => {
         </motion.div>
       </div>
 
-      {/* Scroll indicator */}
+      {/* Scroll indicator - positioned with more space */}
       <motion.button
         onClick={scrollToNext}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-muted-foreground hover:text-accent transition-colors"
+        className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-muted-foreground hover:text-accent transition-colors z-20"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1, y: [0, 10, 0] }}
         transition={{ 
-          opacity: { delay: 1.5 },
+          opacity: { delay: 1.2 },
           y: { repeat: Infinity, duration: 2 }
         }}
       >
