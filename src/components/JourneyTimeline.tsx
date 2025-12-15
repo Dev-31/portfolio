@@ -65,30 +65,30 @@ const MilestoneCard = ({
   isLeft: boolean;
 }) => {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-20%" });
+  const isInView = useInView(ref, { once: true, margin: "-10%" });
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
     <motion.div
       ref={ref}
-      className={`relative flex items-center min-h-[70vh] snap-start ${isLeft ? 'justify-start' : 'justify-end'}`}
-      initial={{ opacity: 0, x: isLeft ? -50 : 50 }}
+      className={`relative flex items-center ${isLeft ? 'justify-start' : 'justify-end'} mb-16 md:mb-24`}
+      initial={{ opacity: 0, x: isLeft ? -30 : 30 }}
       animate={isInView ? { opacity: 1, x: 0 } : {}}
-      transition={{ duration: 0.7, ease: [0.23, 1, 0.32, 1] }}
+      transition={{ duration: 0.6, delay: 0.2 }}
     >
       {/* Content card */}
-      <div className={`w-full md:w-[42%] ${isLeft ? 'md:mr-auto md:pl-8' : 'md:ml-auto md:pr-8'}`}>
-        <div className="glass rounded-2xl p-6 md:p-8 hover:scale-[1.02] transition-transform duration-300">
+      <div className={`w-full md:w-[45%] ${isLeft ? 'md:mr-auto' : 'md:ml-auto'}`}>
+        <div className="glass rounded-2xl p-6 md:p-8 hover:scale-[1.01] transition-transform duration-300">
           {/* Year badge */}
-          <span className="inline-block px-4 py-1.5 text-xs font-body tracking-wider uppercase bg-accent/10 text-accent rounded-full mb-4">
+          <span className="inline-block px-3 py-1 text-xs font-body tracking-wider uppercase bg-accent/10 text-accent rounded-full mb-4">
             {milestone.year}
           </span>
           
-          <h3 className="text-2xl md:text-3xl font-display font-bold text-foreground mb-3 text-shadow-subtle">
+          <h3 className="text-xl md:text-2xl font-display font-bold text-foreground mb-2 text-shadow-subtle">
             {milestone.title}
           </h3>
           
-          <p className="text-muted-foreground font-body text-base leading-relaxed mb-5">
+          <p className="text-muted-foreground font-body text-sm md:text-base leading-relaxed mb-4">
             {milestone.summary}
           </p>
 
@@ -111,14 +111,14 @@ const MilestoneCard = ({
             transition={{ duration: 0.3, ease: 'easeInOut' }}
             className="overflow-hidden"
           >
-            <div className="pt-5 border-t border-border/30 mt-5">
+            <div className="pt-4 border-t border-border/30 mt-4">
               <p className="text-muted-foreground font-body text-sm leading-relaxed mb-4">
                 {milestone.description}
               </p>
               <div className="space-y-2">
                 {milestone.highlights.map((highlight, i) => (
-                  <div key={i} className="flex items-center gap-3">
-                    <span className="w-2 h-2 rounded-full bg-accent" />
+                  <div key={i} className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-accent" />
                     <span className="text-foreground font-body text-sm">{highlight}</span>
                   </div>
                 ))}
@@ -133,21 +133,38 @@ const MilestoneCard = ({
 
 const JourneyTimeline = () => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const pathRef = useRef<SVGPathElement>(null);
   
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start start", "end end"]
+    offset: ["start center", "end center"]
   });
 
   const pathLength = useTransform(scrollYProgress, [0, 1], [0, 1]);
 
-  // Calculate SVG dimensions based on milestones
-  const svgHeight = milestones.length * 70; // vh units equivalent in percentage
+  // Gentle curved path - not too curvy, natural flow
+  const generatePath = () => {
+    const height = milestones.length * 200;
+    let path = 'M 50 0';
+    
+    milestones.forEach((_, index) => {
+      const y = index * 200 + 100;
+      const isLeft = index % 2 === 0;
+      const controlX = isLeft ? 20 : 80;
+      const endX = isLeft ? 30 : 70;
+      
+      // Gentle bezier curves alternating left and right
+      path += ` Q ${controlX} ${y - 50}, ${endX} ${y}`;
+      path += ` Q ${50} ${y + 50}, 50 ${y + 100}`;
+    });
+    
+    return path;
+  };
 
   return (
-    <section id="journey" className="relative py-16 md:py-24" ref={containerRef}>
+    <section id="journey" className="relative py-24 md:py-32" ref={containerRef}>
       {/* Section header */}
-      <div className="text-center mb-12 md:mb-16 px-6">
+      <div className="text-center mb-16 md:mb-24 px-6">
         <motion.span
           className="text-accent font-body text-sm tracking-[0.3em] uppercase mb-4 block"
           initial={{ opacity: 0 }}
@@ -176,24 +193,19 @@ const JourneyTimeline = () => {
         </motion.p>
       </div>
 
-      {/* Timeline container with magnetic scroll */}
-      <div className="relative max-w-6xl mx-auto px-6 snap-y snap-mandatory">
-        {/* SVG curved path - desktop */}
-        <div className="absolute left-1/2 -translate-x-1/2 top-0 h-full hidden md:block pointer-events-none" style={{ width: '400px' }}>
+      {/* Timeline container */}
+      <div className="relative max-w-5xl mx-auto px-6">
+        {/* SVG curved path - visible on desktop */}
+        <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 hidden md:block pointer-events-none">
           <svg
-            viewBox="0 0 400 600"
-            className="w-full h-full overflow-visible"
-            preserveAspectRatio="none"
+            width="100"
+            height={milestones.length * 200 + 100}
+            className="overflow-visible"
+            style={{ marginLeft: '-50px' }}
           >
-            {/* Background path - gentle S-curves */}
+            {/* Background path */}
             <path
-              d="M 200 0 
-                 C 200 30, 80 50, 80 100 
-                 C 80 150, 320 170, 320 220 
-                 C 320 270, 80 290, 80 340 
-                 C 80 390, 320 410, 320 460 
-                 C 320 510, 80 530, 80 580 
-                 C 80 600, 200 600, 200 600"
+              d={generatePath()}
               fill="none"
               stroke="hsl(var(--border))"
               strokeWidth="2"
@@ -201,45 +213,34 @@ const JourneyTimeline = () => {
             />
             {/* Animated path */}
             <motion.path
-              d="M 200 0 
-                 C 200 30, 80 50, 80 100 
-                 C 80 150, 320 170, 320 220 
-                 C 320 270, 80 290, 80 340 
-                 C 80 390, 320 410, 320 460 
-                 C 320 510, 80 530, 80 580 
-                 C 80 600, 200 600, 200 600"
+              ref={pathRef}
+              d={generatePath()}
               fill="none"
               stroke="hsl(var(--accent))"
-              strokeWidth="3"
+              strokeWidth="2"
               strokeLinecap="round"
               style={{ pathLength }}
             />
             
             {/* Milestone dots */}
             {milestones.map((_, index) => {
-              const positions = [
-                { x: 200, y: 0 },
-                { x: 80, y: 100 },
-                { x: 320, y: 220 },
-                { x: 80, y: 340 },
-                { x: 320, y: 460 },
-                { x: 80, y: 580 },
-              ];
-              const pos = positions[index] || { x: 200, y: 600 };
+              const y = index * 200 + 100;
+              const isLeft = index % 2 === 0;
+              const x = isLeft ? 30 : 70;
               
               return (
                 <motion.circle
                   key={index}
-                  cx={pos.x}
-                  cy={pos.y}
-                  r="10"
+                  cx={x}
+                  cy={y}
+                  r="8"
                   fill="hsl(var(--background))"
                   stroke="hsl(var(--accent))"
-                  strokeWidth="3"
+                  strokeWidth="2"
                   initial={{ scale: 0 }}
                   whileInView={{ scale: 1 }}
-                  viewport={{ once: true, margin: "-20%" }}
-                  transition={{ delay: 0.2 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.3 }}
                 />
               );
             })}
@@ -247,7 +248,7 @@ const JourneyTimeline = () => {
         </div>
 
         {/* Mobile vertical line */}
-        <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-border md:hidden">
+        <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-border md:hidden">
           <motion.div
             className="w-full bg-accent origin-top"
             style={{ scaleY: pathLength, height: '100%' }}
@@ -255,7 +256,7 @@ const JourneyTimeline = () => {
         </div>
 
         {/* Milestone cards */}
-        <div className="relative ml-12 md:ml-0">
+        <div className="relative">
           {milestones.map((milestone, index) => (
             <MilestoneCard
               key={index}

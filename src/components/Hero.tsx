@@ -32,17 +32,28 @@ const Hero = () => {
       {/* Background gradient */}
       <div className="absolute inset-0 gradient-radial opacity-50" />
       
-      {/* Subtle grid pattern */}
-      <div className="absolute inset-0 opacity-[0.02]">
-        <svg width="100%" height="100%">
-          <defs>
-            <pattern id="hero-grid" width="80" height="80" patternUnits="userSpaceOnUse">
-              <path d="M 80 0 L 0 0 0 80" fill="none" stroke="currentColor" strokeWidth="1"/>
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#hero-grid)" />
-        </svg>
-      </div>
+      {/* Topographic pattern */}
+      <svg
+        className="absolute inset-0 w-full h-full opacity-[0.03]"
+        viewBox="0 0 1000 1000"
+        preserveAspectRatio="xMidYMid slice"
+      >
+        {[...Array(20)].map((_, i) => (
+          <motion.ellipse
+            key={i}
+            cx="500"
+            cy="500"
+            rx={100 + i * 45}
+            ry={80 + i * 35}
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 2, delay: i * 0.1 }}
+          />
+        ))}
+      </svg>
 
       <div className="relative z-10 text-center max-w-5xl mx-auto">
         {/* Name with shadow effect */}
@@ -52,7 +63,7 @@ const Hero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
         >
-          <h1 className="text-5xl md:text-7xl lg:text-8xl xl:text-9xl font-display font-extrabold tracking-tight text-shadow-deep">
+          <h1 className="text-5xl md:text-7xl lg:text-8xl xl:text-9xl font-display font-bold tracking-tight text-shadow-deep">
             DEV SOPARIWALA
           </h1>
           {/* Shadow duplicate for depth */}

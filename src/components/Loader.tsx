@@ -10,10 +10,10 @@ const Loader = ({ onComplete }: LoaderProps) => {
 
   useEffect(() => {
     const timers = [
-      setTimeout(() => setPhase('name'), 1000),
-      setTimeout(() => setPhase('tagline'), 2200),
-      setTimeout(() => setPhase('exit'), 3000),
-      setTimeout(onComplete, 3600),
+      setTimeout(() => setPhase('name'), 800),
+      setTimeout(() => setPhase('tagline'), 2000),
+      setTimeout(() => setPhase('exit'), 2800),
+      setTimeout(onComplete, 3400),
     ];
     return () => timers.forEach(clearTimeout);
   }, [onComplete]);
@@ -32,65 +32,46 @@ const Loader = ({ onComplete }: LoaderProps) => {
           <div className="absolute inset-0 opacity-[0.02]">
             <svg width="100%" height="100%">
               <defs>
-                <pattern id="loader-grid" width="60" height="60" patternUnits="userSpaceOnUse">
+                <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
                   <path d="M 60 0 L 0 0 0 60" fill="none" stroke="currentColor" strokeWidth="1"/>
                 </pattern>
               </defs>
-              <rect width="100%" height="100%" fill="url(#loader-grid)" />
+              <rect width="100%" height="100%" fill="url(#grid)" />
             </svg>
           </div>
 
-          <div className="relative z-10 flex flex-col items-center gap-8">
-            {/* Bold DS Monogram */}
+          <div className="relative z-10 flex flex-col items-center gap-6">
+            {/* DS Monogram Logo */}
             <motion.div
-              className="relative w-28 h-28 md:w-36 md:h-36"
+              className="relative w-20 h-20 md:w-24 md:h-24"
               initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ 
-                opacity: 1, 
-                scale: 1,
-              }}
-              transition={{ 
-                duration: 0.8, 
-                ease: [0.23, 1, 0.32, 1],
-              }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
             >
               <svg viewBox="0 0 100 100" className="w-full h-full">
-                {/* Bold D shape */}
+                {/* D shape */}
                 <motion.path
-                  d="M 25 15 L 25 85 L 50 85 C 78 85 88 65 88 50 C 88 35 78 15 50 15 L 25 15"
+                  d="M 20 15 L 20 85 L 45 85 C 70 85 80 65 80 50 C 80 35 70 15 45 15 L 20 15"
                   fill="none"
                   stroke="hsl(var(--foreground))"
-                  strokeWidth="6"
+                  strokeWidth="3"
                   strokeLinecap="round"
-                  strokeLinejoin="round"
                   initial={{ pathLength: 0 }}
                   animate={{ pathLength: 1 }}
-                  transition={{ duration: 0.9, ease: [0.23, 1, 0.32, 1] }}
+                  transition={{ duration: 0.8, ease: "easeOut" }}
                 />
-                {/* Bold S shape integrated */}
+                {/* S shape overlay */}
                 <motion.path
-                  d="M 70 32 C 55 28 42 32 42 44 C 42 56 58 54 66 58 C 74 62 76 72 66 78 C 56 84 42 80 38 74"
+                  d="M 65 30 C 50 30 40 35 40 45 C 40 55 50 55 60 55 C 70 55 75 60 75 70 C 75 80 65 85 50 85"
                   fill="none"
                   stroke="hsl(var(--accent))"
-                  strokeWidth="6"
+                  strokeWidth="3"
                   strokeLinecap="round"
-                  strokeLinejoin="round"
                   initial={{ pathLength: 0 }}
                   animate={{ pathLength: 1 }}
-                  transition={{ duration: 0.9, delay: 0.4, ease: [0.23, 1, 0.32, 1] }}
+                  transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
                 />
               </svg>
-              
-              {/* Subtle glow effect */}
-              <motion.div
-                className="absolute inset-0 rounded-full"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: [0, 0.3, 0] }}
-                transition={{ duration: 2, delay: 0.8, repeat: Infinity }}
-                style={{
-                  background: 'radial-gradient(circle, hsl(var(--accent) / 0.2) 0%, transparent 70%)',
-                }}
-              />
             </motion.div>
 
             {/* Name reveal - letter by letter */}
@@ -99,11 +80,11 @@ const Loader = ({ onComplete }: LoaderProps) => {
                 {nameLetters.map((letter, index) => (
                   <motion.span
                     key={index}
-                    className="text-2xl md:text-4xl lg:text-5xl font-display font-extrabold text-foreground"
-                    initial={{ y: 60, opacity: 0 }}
+                    className="text-2xl md:text-4xl lg:text-5xl font-display font-bold text-foreground"
+                    initial={{ y: 50, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{
-                      duration: 0.5,
+                      duration: 0.4,
                       delay: index * 0.04,
                       ease: [0.23, 1, 0.32, 1],
                     }}
@@ -129,16 +110,16 @@ const Loader = ({ onComplete }: LoaderProps) => {
 
           {/* Decorative corner elements */}
           <motion.div
-            className="absolute top-8 left-8 w-16 h-16 border-l-2 border-t-2 border-border/40"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.3, duration: 0.5 }}
+            className="absolute top-8 left-8 w-12 h-12 border-l border-t border-border/30"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
           />
           <motion.div
-            className="absolute bottom-8 right-8 w-16 h-16 border-r-2 border-b-2 border-border/40"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.3, duration: 0.5 }}
+            className="absolute bottom-8 right-8 w-12 h-12 border-r border-b border-border/30"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
           />
         </motion.div>
       )}

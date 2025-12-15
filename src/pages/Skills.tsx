@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
+import CursorGlow from '@/components/CursorGlow';
 
 interface SkillCategory {
   name: string;
@@ -41,6 +42,7 @@ const skillCategories: SkillCategory[] = [
 const Skills = () => {
   return (
     <div className="relative min-h-screen">
+      <CursorGlow />
       <Navigation />
       
       <main className="pt-32 pb-24 px-6">
