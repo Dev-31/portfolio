@@ -30,7 +30,7 @@ const Loader = ({ onComplete }: LoaderProps) => {
           transition={{ duration: 0.7, ease: [0.23, 1, 0.32, 1] }}
         >
           <div className="relative z-10 flex flex-col items-center gap-8">
-            {/* DS Monogram Logo */}
+            {/* DS Monogram Logo - Bold unified design */}
             <motion.div
               className="relative"
               initial={{ opacity: 0, scale: 0.8 }}
@@ -38,43 +38,47 @@ const Loader = ({ onComplete }: LoaderProps) => {
               transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
             >
               <svg 
-                width="80" 
-                height="80" 
-                viewBox="0 0 80 80" 
+                width="100" 
+                height="100" 
+                viewBox="0 0 100 100" 
                 className="text-foreground"
               >
-                {/* D letter */}
+                {/* D letter - Bold curved shape */}
                 <motion.path
-                  d="M15 15 L15 65 L35 65 C50 65 60 55 60 40 C60 25 50 15 35 15 L15 15"
+                  d="M 20 20 L 20 80 L 40 80 C 60 80, 70 65, 70 50 C 70 35, 60 20, 40 20 L 20 20"
                   fill="none"
                   stroke="currentColor"
-                  strokeWidth="4"
+                  strokeWidth="5"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   initial={{ pathLength: 0 }}
                   animate={{ pathLength: 1 }}
                   transition={{ duration: 0.7, ease: "easeOut" }}
                 />
-                {/* S letter - overlapping */}
+                {/* S letter - Overlapping elegant curve */}
                 <motion.path
-                  d="M55 25 C55 25 65 25 65 35 C65 42 58 45 50 47 C42 49 35 52 35 60 C35 68 45 70 55 70"
+                  d="M 75 28 C 65 20, 45 22, 45 35 C 45 48, 75 45, 75 60 C 75 75, 55 80, 40 72"
                   fill="none"
                   stroke="currentColor"
-                  strokeWidth="4"
+                  strokeWidth="5"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   initial={{ pathLength: 0 }}
                   animate={{ pathLength: 1 }}
-                  transition={{ duration: 0.7, delay: 0.2, ease: "easeOut" }}
+                  transition={{ duration: 0.7, delay: 0.3, ease: "easeOut" }}
                 />
               </svg>
               
-              {/* Glow effect */}
+              {/* Glow effect with pulse */}
               <motion.div
-                className="absolute inset-0 blur-xl bg-accent/20 rounded-full"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: [0, 0.5, 0.3] }}
-                transition={{ duration: 1, delay: 0.5 }}
+                className="absolute inset-0 blur-xl rounded-full"
+                style={{ background: 'hsl(var(--accent) / 0.25)' }}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ 
+                  opacity: [0, 0.6, 0.4], 
+                  scale: [0.8, 1.1, 1] 
+                }}
+                transition={{ duration: 1.2, delay: 0.5, ease: "easeOut" }}
               />
             </motion.div>
 
