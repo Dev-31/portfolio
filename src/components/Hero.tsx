@@ -29,8 +29,19 @@ const Hero = () => {
 
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-center px-6 overflow-hidden">
-      {/* Subtle grid background */}
-      <div className="absolute inset-0 opacity-[0.02]">
+      {/* Gradient background for light mode visibility */}
+      <div className="absolute inset-0 gradient-subtle" />
+      
+      {/* Radial glow behind content */}
+      <div 
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: 'radial-gradient(ellipse 80% 60% at 50% 40%, hsl(var(--accent) / 0.08) 0%, transparent 60%)'
+        }}
+      />
+      
+      {/* Subtle grid background - increased opacity for visibility */}
+      <div className="absolute inset-0 opacity-[0.04]">
         <div 
           className="w-full h-full"
           style={{
@@ -98,7 +109,7 @@ const Hero = () => {
 
         {/* CTA Buttons */}
         <motion.div
-          className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-24"
+          className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-32"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.8 }}
@@ -121,7 +132,7 @@ const Hero = () => {
       {/* Scroll indicator - positioned with more space */}
       <motion.button
         onClick={scrollToNext}
-        className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-muted-foreground hover:text-accent transition-colors z-20"
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-muted-foreground hover:text-accent transition-colors z-20"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1, y: [0, 10, 0] }}
         transition={{ 
