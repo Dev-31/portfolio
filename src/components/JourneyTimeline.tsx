@@ -228,28 +228,29 @@ const JourneyTimeline = () => {
   }, []);
 
   // Calculate SVG path dimensions based on milestones
-  const totalHeight = milestones.length * 220;
-  const amplitude = 120;
+  const totalHeight = milestones.length * 280;
+  const amplitude = 35; // Subtle curve amplitude
 
-  // Generate flowing S-curve path for desktop
+  // Generate subtle S-curve path for desktop - matching reference design
   const generateDesktopPath = () => {
     const points: string[] = [];
     const segmentHeight = totalHeight / milestones.length;
+    const centerX = 200;
     
-    points.push(`M 200 0`);
+    points.push(`M ${centerX} 0`);
     
     milestones.forEach((_, index) => {
-      const y1 = index * segmentHeight;
-      const y2 = (index + 0.5) * segmentHeight;
-      const y3 = (index + 1) * segmentHeight;
+      const yStart = index * segmentHeight;
+      const yMid = (index + 0.5) * segmentHeight;
+      const yEnd = (index + 1) * segmentHeight;
       
+      // Subtle curve direction alternates
       const direction = index % 2 === 0 ? 1 : -1;
-      const x1 = 200;
-      const x2 = 200 + (amplitude * direction);
-      const x3 = 200;
+      const curveX = centerX + (amplitude * direction);
       
-      points.push(`C ${x1} ${y1 + segmentHeight * 0.25}, ${x2} ${y2 - segmentHeight * 0.15}, ${x2} ${y2}`);
-      points.push(`C ${x2} ${y2 + segmentHeight * 0.15}, ${x3} ${y3 - segmentHeight * 0.25}, ${x3} ${y3}`);
+      // Gentle bezier curves - much more controlled
+      points.push(`C ${centerX} ${yStart + segmentHeight * 0.3}, ${curveX} ${yMid - segmentHeight * 0.1}, ${curveX} ${yMid}`);
+      points.push(`C ${curveX} ${yMid + segmentHeight * 0.1}, ${centerX} ${yEnd - segmentHeight * 0.3}, ${centerX} ${yEnd}`);
     });
     
     return points.join(' ');
@@ -328,9 +329,9 @@ const JourneyTimeline = () => {
           return (
             <motion.div
               key={index}
-              className="absolute w-4 h-4 rounded-full bg-accent border-4 border-background shadow-lg z-10"
+              className="absolute w-3.5 h-3.5 rounded-full bg-foreground border-4 border-background shadow-lg z-10"
               style={{
-                left: `calc(50% + ${(x - 200)}px - 8px)`,
+                left: `calc(50% + ${(x - 200)}px - 7px)`,
                 top: `${y}px`,
               }}
               initial={{ scale: 0 }}
