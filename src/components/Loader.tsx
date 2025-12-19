@@ -38,34 +38,34 @@ const Loader = ({ onComplete }: LoaderProps) => {
               transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
             >
               <svg 
-                width="100" 
-                height="100" 
-                viewBox="0 0 100 100" 
+                width="120" 
+                height="60" 
+                viewBox="0 0 120 60" 
                 className="text-foreground"
               >
-                {/* D letter - Bold curved shape */}
+                {/* D letter - Clean, separate */}
                 <motion.path
-                  d="M 20 20 L 20 80 L 40 80 C 60 80, 70 65, 70 50 C 70 35, 60 20, 40 20 L 20 20"
+                  d="M 10 10 L 10 50 L 28 50 C 45 50, 52 38, 52 30 C 52 22, 45 10, 28 10 Z"
                   fill="none"
                   stroke="currentColor"
-                  strokeWidth="5"
+                  strokeWidth="4"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   initial={{ pathLength: 0 }}
                   animate={{ pathLength: 1 }}
-                  transition={{ duration: 0.7, ease: "easeOut" }}
+                  transition={{ duration: 0.6, ease: "easeOut" }}
                 />
-                {/* S letter - Overlapping elegant curve */}
+                {/* S letter - Clean, separate, positioned to the right */}
                 <motion.path
-                  d="M 75 28 C 65 20, 45 22, 45 35 C 45 48, 75 45, 75 60 C 75 75, 55 80, 40 72"
+                  d="M 100 16 C 92 8, 72 10, 72 20 C 72 30, 100 28, 100 40 C 100 52, 78 54, 68 46"
                   fill="none"
                   stroke="currentColor"
-                  strokeWidth="5"
+                  strokeWidth="4"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   initial={{ pathLength: 0 }}
                   animate={{ pathLength: 1 }}
-                  transition={{ duration: 0.7, delay: 0.3, ease: "easeOut" }}
+                  transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
                 />
               </svg>
               
