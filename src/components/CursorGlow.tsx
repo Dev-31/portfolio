@@ -1,51 +1,67 @@
-import { useEffect, useState } from 'react';
-import { motion, useSpring } from 'framer-motion';
+import { useEffect, useRef, useCallback } from 'react';
 
 const CursorGlow = () => {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [isVisible, setIsVisible] = useState(false);
+  const glowRef = useRef<HTMLDivElement>(null);
+  const rafRef = useRef<number>();
+  const positionRef = useRef({ x: 0, y: 0 });
+  const targetRef = useRef({ x: 0, y: 0 });
 
-  const springConfig = { damping: 25, stiffness: 150 };
-  const x = useSpring(mousePosition.x, springConfig);
-  const y = useSpring(mousePosition.y, springConfig);
+  const animate = useCallback(() => {
+    // Smooth lerp towards target
+    positionRef.current.x += (targetRef.current.x - positionRef.current.x) * 0.1;
+    positionRef.current.y += (targetRef.current.y - positionRef.current.y) * 0.1;
+
+    if (glowRef.current) {
+      glowRef.current.style.transform = `translate(${positionRef.current.x - 200}px, ${positionRef.current.y - 200}px)`;
+    }
+
+    rafRef.current = requestAnimationFrame(animate);
+  }, []);
 
   useEffect(() => {
+    // Don't show on touch devices
+    if ('ontouchstart' in window) return;
+
     const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-      if (!isVisible) setIsVisible(true);
+      targetRef.current = { x: e.clientX, y: e.clientY };
+      if (glowRef.current) {
+        glowRef.current.style.opacity = '1';
+      }
     };
 
-    const handleMouseLeave = () => setIsVisible(false);
-    const handleMouseEnter = () => setIsVisible(true);
+    const handleMouseLeave = () => {
+      if (glowRef.current) {
+        glowRef.current.style.opacity = '0';
+      }
+    };
 
-    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
     document.body.addEventListener('mouseleave', handleMouseLeave);
-    document.body.addEventListener('mouseenter', handleMouseEnter);
+
+    rafRef.current = requestAnimationFrame(animate);
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
       document.body.removeEventListener('mouseleave', handleMouseLeave);
-      document.body.removeEventListener('mouseenter', handleMouseEnter);
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
+      }
     };
-  }, [isVisible]);
+  }, [animate]);
 
-  // Don't show on touch devices
+  // Don't render on touch devices
   if (typeof window !== 'undefined' && 'ontouchstart' in window) {
     return null;
   }
 
   return (
-    <motion.div
-      className="pointer-events-none fixed w-[400px] h-[400px] rounded-full z-0"
+    <div
+      ref={glowRef}
+      className="pointer-events-none fixed w-[400px] h-[400px] rounded-full z-0 opacity-0 will-change-transform"
       style={{
-        x,
-        y,
-        translateX: '-50%',
-        translateY: '-50%',
-        background: 'radial-gradient(circle, hsl(var(--accent) / 0.08) 0%, transparent 70%)',
+        background: 'radial-gradient(circle, hsl(var(--accent) / 0.06) 0%, transparent 70%)',
+        transition: 'opacity 0.3s ease',
       }}
-      animate={{ opacity: isVisible ? 1 : 0 }}
-      transition={{ duration: 0.3 }}
     />
   );
 };
