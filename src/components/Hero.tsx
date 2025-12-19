@@ -28,7 +28,7 @@ const Hero = () => {
   };
 
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center px-6 overflow-hidden">
+    <section className="relative min-h-screen flex flex-col items-center justify-center px-6 overflow-hidden pt-20 md:pt-0">
       {/* Gradient background for light mode visibility */}
       <div className="absolute inset-0 gradient-subtle" />
       

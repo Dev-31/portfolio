@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 
@@ -73,7 +73,7 @@ const DesktopMilestoneCard = ({ milestone, index }: { milestone: JourneyMileston
         className={`w-[calc(50%-3rem)] ${isLeft ? 'text-right pr-8' : 'text-left pl-8'}`}
         initial={{ opacity: 0, x: isLeft ? -50 : 50 }}
         animate={isInView ? { opacity: 1, x: 0 } : {}}
-        transition={{ duration: 0.6, delay: 0.2 }}
+        transition={{ duration: 0.5 }}
       >
         <div className="glass rounded-2xl p-6">
           <span className="inline-block px-3 py-1 text-sm font-display font-bold bg-accent text-accent-foreground rounded-full mb-3">
@@ -129,11 +129,21 @@ const DesktopMilestoneCard = ({ milestone, index }: { milestone: JourneyMileston
   );
 };
 
-// Mobile milestone card - single column
-const MobileMilestoneCard = ({ milestone, index }: { milestone: JourneyMilestone; index: number }) => {
+// Mobile milestone card - single column with height reporting
+const MobileMilestoneCard = ({ milestone, index, onHeightChange }: { 
+  milestone: JourneyMilestone; 
+  index: number;
+  onHeightChange?: () => void;
+}) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-10%" });
   const [isExpanded, setIsExpanded] = useState(false);
+
+  const handleToggle = () => {
+    setIsExpanded(!isExpanded);
+    // Trigger height recalculation after animation
+    setTimeout(() => onHeightChange?.(), 350);
+  };
 
   return (
     <div ref={ref} className="relative pl-8">
@@ -141,7 +151,7 @@ const MobileMilestoneCard = ({ milestone, index }: { milestone: JourneyMilestone
       <motion.div
         initial={{ opacity: 0, x: -20 }}
         animate={isInView ? { opacity: 1, x: 0 } : {}}
-        transition={{ duration: 0.5, delay: 0.1 }}
+        transition={{ duration: 0.4 }}
       >
         <div className="glass rounded-xl p-5">
           <span className="inline-block px-3 py-1 text-sm font-display font-bold bg-accent text-accent-foreground rounded-full mb-3">
@@ -176,7 +186,7 @@ const MobileMilestoneCard = ({ milestone, index }: { milestone: JourneyMilestone
           </motion.div>
 
           <button
-            onClick={() => setIsExpanded(!isExpanded)}
+            onClick={handleToggle}
             className="mt-3 flex items-center gap-1 text-accent text-sm font-body hover:underline transition-all"
           >
             {isExpanded ? (
@@ -193,6 +203,9 @@ const MobileMilestoneCard = ({ milestone, index }: { milestone: JourneyMilestone
 
 const JourneyTimeline = () => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const mobileContentRef = useRef<HTMLDivElement>(null);
+  const [mobileLineHeight, setMobileLineHeight] = useState(milestones.length * 200);
+  
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start center", "end center"]
@@ -200,29 +213,41 @@ const JourneyTimeline = () => {
 
   const pathLength = useTransform(scrollYProgress, [0, 1], [0, 1]);
 
+  // Recalculate mobile line height based on actual content
+  const updateMobileLineHeight = () => {
+    if (mobileContentRef.current) {
+      const height = mobileContentRef.current.offsetHeight;
+      setMobileLineHeight(height);
+    }
+  };
+
+  useEffect(() => {
+    updateMobileLineHeight();
+    window.addEventListener('resize', updateMobileLineHeight);
+    return () => window.removeEventListener('resize', updateMobileLineHeight);
+  }, []);
+
   // Calculate SVG path dimensions based on milestones
   const totalHeight = milestones.length * 220;
-  const amplitude = 120; // How far the curve swings left/right
+  const amplitude = 120;
 
   // Generate flowing S-curve path for desktop
   const generateDesktopPath = () => {
     const points: string[] = [];
     const segmentHeight = totalHeight / milestones.length;
     
-    points.push(`M 200 0`); // Start at center top
+    points.push(`M 200 0`);
     
     milestones.forEach((_, index) => {
       const y1 = index * segmentHeight;
       const y2 = (index + 0.5) * segmentHeight;
       const y3 = (index + 1) * segmentHeight;
       
-      // Alternate direction
       const direction = index % 2 === 0 ? 1 : -1;
-      const x1 = 200; // Center
-      const x2 = 200 + (amplitude * direction); // Peak of curve
-      const x3 = 200; // Back to center
+      const x1 = 200;
+      const x2 = 200 + (amplitude * direction);
+      const x3 = 200;
       
-      // Smooth Bezier curve
       points.push(`C ${x1} ${y1 + segmentHeight * 0.25}, ${x2} ${y2 - segmentHeight * 0.15}, ${x2} ${y2}`);
       points.push(`C ${x2} ${y2 + segmentHeight * 0.15}, ${x3} ${y3 - segmentHeight * 0.25}, ${x3} ${y3}`);
     });
@@ -230,13 +255,7 @@ const JourneyTimeline = () => {
     return points.join(' ');
   };
 
-  // Generate straight vertical path for mobile
-  const generateMobilePath = () => {
-    return `M 16 0 L 16 ${totalHeight}`;
-  };
-
   const desktopPath = generateDesktopPath();
-  const mobilePath = generateMobilePath();
 
   return (
     <section id="journey" className="py-24 px-4 md:px-6" ref={containerRef}>
@@ -252,10 +271,10 @@ const JourneyTimeline = () => {
         </motion.span>
         <motion.h2
           className="text-3xl md:text-5xl lg:text-6xl font-display font-bold text-shadow-deep"
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ delay: 0.2 }}
+          transition={{ delay: 0.1 }}
         >
           The Path So Far
         </motion.h2>
@@ -264,7 +283,7 @@ const JourneyTimeline = () => {
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          transition={{ delay: 0.4 }}
+          transition={{ delay: 0.2 }}
         >
           Scroll through the chapters of my journey — from curious student to engineer with vision.
         </motion.p>
@@ -317,7 +336,7 @@ const JourneyTimeline = () => {
               initial={{ scale: 0 }}
               whileInView={{ scale: 1 }}
               viewport={{ once: true, margin: "-20%" }}
-              transition={{ duration: 0.4, delay: 0.3 }}
+              transition={{ duration: 0.3 }}
             />
           );
         })}
@@ -332,31 +351,18 @@ const JourneyTimeline = () => {
 
       {/* Mobile Timeline */}
       <div className="md:hidden relative max-w-lg mx-auto">
-        {/* Vertical line on left */}
-        <svg
-          className="absolute left-3 top-0 overflow-visible pointer-events-none"
-          width="32"
-          height={milestones.length * 280}
-          viewBox={`0 0 32 ${milestones.length * 280}`}
-        >
-          {/* Background line */}
-          <path
-            d={`M 16 0 L 16 ${milestones.length * 280}`}
-            fill="none"
-            stroke="hsl(var(--border))"
-            strokeWidth="2"
-            strokeLinecap="round"
-          />
-          {/* Animated progress line */}
-          <motion.path
-            d={`M 16 0 L 16 ${milestones.length * 280}`}
-            fill="none"
-            stroke="hsl(var(--accent))"
-            strokeWidth="3"
-            strokeLinecap="round"
-            style={{ pathLength }}
-          />
-        </svg>
+        {/* Dynamic vertical line - adjusts to content height */}
+        <div 
+          className="absolute left-[19px] top-0 w-0.5 bg-border transition-all duration-300"
+          style={{ height: `${mobileLineHeight}px` }}
+        />
+        <motion.div
+          className="absolute left-[18px] top-0 w-1 bg-accent origin-top"
+          style={{ 
+            height: `${mobileLineHeight}px`,
+            scaleY: pathLength 
+          }}
+        />
 
         {/* Milestone dots */}
         {milestones.map((_, index) => (
@@ -364,8 +370,8 @@ const JourneyTimeline = () => {
             key={index}
             className="absolute w-3 h-3 rounded-full bg-accent border-2 border-background shadow-md z-10"
             style={{
-              left: '11px',
-              top: `${index * 280 + 28}px`,
+              left: '13px',
+              top: `${index * (mobileLineHeight / milestones.length) + 28}px`,
             }}
             initial={{ scale: 0 }}
             whileInView={{ scale: 1 }}
@@ -375,9 +381,14 @@ const JourneyTimeline = () => {
         ))}
 
         {/* Mobile cards */}
-        <div className="space-y-8">
+        <div ref={mobileContentRef} className="space-y-6">
           {milestones.map((milestone, index) => (
-            <MobileMilestoneCard key={index} milestone={milestone} index={index} />
+            <MobileMilestoneCard 
+              key={index} 
+              milestone={milestone} 
+              index={index}
+              onHeightChange={updateMobileLineHeight}
+            />
           ))}
         </div>
       </div>

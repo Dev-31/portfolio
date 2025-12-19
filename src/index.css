@@ -86,6 +86,12 @@
   html {
     scroll-behavior: smooth;
     scroll-padding-top: 80px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Performance optimizations */
+  .will-change-transform {
+    will-change: transform;
   }
 
   body {
