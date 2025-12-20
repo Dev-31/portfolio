@@ -66,7 +66,7 @@ const DesktopMilestoneCard = ({ milestone, index }: { milestone: JourneyMileston
     <div 
       ref={ref}
       className={`relative flex items-center ${isLeft ? 'flex-row' : 'flex-row-reverse'}`}
-      style={{ minHeight: '200px' }}
+      style={{ minHeight: '160px' }}
     >
       {/* Content card */}
       <motion.div
@@ -227,11 +227,11 @@ const JourneyTimeline = () => {
     return () => window.removeEventListener('resize', updateMobileLineHeight);
   }, []);
 
-  // Calculate SVG path dimensions based on milestones
-  const totalHeight = milestones.length * 280;
-  const amplitude = 35; // Subtle curve amplitude
+  // Calculate SVG path dimensions based on milestones - compact spacing like reference
+  const totalHeight = milestones.length * 200;
+  const amplitude = 18; // Very subtle curve - matching reference
 
-  // Generate subtle S-curve path for desktop - matching reference design
+  // Generate gentle S-curve path for desktop - matching reference exactly
   const generateDesktopPath = () => {
     const points: string[] = [];
     const segmentHeight = totalHeight / milestones.length;
@@ -248,9 +248,8 @@ const JourneyTimeline = () => {
       const direction = index % 2 === 0 ? 1 : -1;
       const curveX = centerX + (amplitude * direction);
       
-      // Gentle bezier curves - much more controlled
-      points.push(`C ${centerX} ${yStart + segmentHeight * 0.3}, ${curveX} ${yMid - segmentHeight * 0.1}, ${curveX} ${yMid}`);
-      points.push(`C ${curveX} ${yMid + segmentHeight * 0.1}, ${centerX} ${yEnd - segmentHeight * 0.3}, ${centerX} ${yEnd}`);
+      // Very gentle curves - almost straight with slight wave
+      points.push(`Q ${curveX} ${yMid}, ${centerX} ${yEnd}`);
     });
     
     return points.join(' ');
@@ -319,31 +318,28 @@ const JourneyTimeline = () => {
           />
         </svg>
 
-        {/* Milestone dots on the path */}
+        {/* Milestone dots on the path - positioned at midpoint of each segment */}
         {milestones.map((_, index) => {
           const segmentHeight = totalHeight / milestones.length;
           const y = (index + 0.5) * segmentHeight;
           const direction = index % 2 === 0 ? 1 : -1;
-          const x = 200 + (amplitude * direction);
+          // Dot at the peak of the curve (midpoint)
+          const x = 200 + (amplitude * direction * 0.5);
           
           return (
-            <motion.div
+            <div
               key={index}
-              className="absolute w-3.5 h-3.5 rounded-full bg-foreground border-4 border-background shadow-lg z-10"
+              className="absolute w-3 h-3 rounded-full bg-foreground border-[3px] border-background shadow-md z-10"
               style={{
-                left: `calc(50% + ${(x - 200)}px - 7px)`,
+                left: `calc(50% + ${(x - 200)}px - 6px)`,
                 top: `${y}px`,
               }}
-              initial={{ scale: 0 }}
-              whileInView={{ scale: 1 }}
-              viewport={{ once: true, margin: "-20%" }}
-              transition={{ duration: 0.3 }}
             />
           );
         })}
 
         {/* Milestone cards */}
-        <div className="space-y-8" style={{ minHeight: totalHeight }}>
+        <div className="space-y-4" style={{ minHeight: totalHeight }}>
           {milestones.map((milestone, index) => (
             <DesktopMilestoneCard key={index} milestone={milestone} index={index} />
           ))}
