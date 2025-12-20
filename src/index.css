@@ -84,14 +84,21 @@
   }
 
   html {
-    scroll-behavior: smooth;
     scroll-padding-top: 80px;
     -webkit-overflow-scrolling: touch;
+  }
+
+  /* GPU acceleration for smoother scrolling */
+  body {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
   }
 
   /* Performance optimizations */
   .will-change-transform {
     will-change: transform;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
   }
 
   body {
