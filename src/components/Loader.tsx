@@ -25,7 +25,7 @@ const Loader = ({ onComplete }: LoaderProps) => {
     <AnimatePresence>
       {phase !== 'exit' && (
         <motion.div
-          className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-background pt-32"
+          className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-background pt-64"
           exit={{ opacity: 0 }}
           transition={{ duration: 0.7, ease: [0.23, 1, 0.32, 1] }}
         >
